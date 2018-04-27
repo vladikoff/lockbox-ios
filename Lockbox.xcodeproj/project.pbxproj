@@ -101,6 +101,7 @@
 		7AA54F0C6779D207AC3DA3E5 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA5445C1077C84873E7CB1C /* Parser.swift */; };
 		7AA54FF1E300E6DEEFD77717 /* UIColor+Spec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54EDDE9ECFDD6DFC4DEC5 /* UIColor+Spec.swift */; };
 		7D0D0EDD1F9A5CE2007D8960 /* ItemSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0D0EDC1F9A5CE2007D8960 /* ItemSpec.swift */; };
+		7D1AAE0020931ECB00098264 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1AADFF20931ECB00098264 /* main.swift */; };
 		7D1B1ACE1F9902A500C1F5FF /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D1B1A8B1F98F86400C1F5FF /* Nimble.framework */; };
 		7D1B1ACF1F9902A800C1F5FF /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D1B1A8D1F98F86600C1F5FF /* Quick.framework */; };
 		7D1B1AD11F9902B300C1F5FF /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7D1B1A8D1F98F86600C1F5FF /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -304,6 +305,7 @@
 		7AA54FE4F9D6DAEF984F63E6 /* Observable+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Observable+.swift"; sourceTree = "<group>"; };
 		7AA54FFBEBCACA7A506F5C16 /* DispatcherSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatcherSpec.swift; sourceTree = "<group>"; };
 		7D0D0EDC1F9A5CE2007D8960 /* ItemSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSpec.swift; sourceTree = "<group>"; };
+		7D1AADFF20931ECB00098264 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		7D1B1A8B1F98F86400C1F5FF /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		7D1B1A8D1F98F86600C1F5FF /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		7D1B1A991F98FC0600C1F5FF /* lockbox-datastore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lockbox-datastore"; path = "lockbox-ios/lockbox-datastore"; sourceTree = "<group>"; };
@@ -543,6 +545,7 @@
 				7AA5406822AB67B669BAF89B /* Info.plist */,
 				7AA54F13767439D644B91C5E /* lockbox-ios-Bridging-Header.h */,
 				7AA547418F6E716AEEE385F6 /* Constants.swift */,
+				7D1AADFF20931ECB00098264 /* main.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1026,6 +1029,7 @@
 				7AA548263012DE1D03950DE0 /* RouteStore.swift in Sources */,
 				7AA54E83D68AA39FB3A895AF /* RootPresenter.swift in Sources */,
 				7AA54B936D967416C7AD4F3C /* Observable+.swift in Sources */,
+				7D1AAE0020931ECB00098264 /* main.swift in Sources */,
 				7D6FB87B204F00E2005E23AA /* StatusAlert.swift in Sources */,
 				D86A307620829B7F00589CA8 /* UIApplication+.swift in Sources */,
 				7AA548BBE384D40397D26E9B /* RootView.swift in Sources */,

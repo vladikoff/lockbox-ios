@@ -7,7 +7,6 @@ import Telemetry
 
 let PostFirstRunKey = "firstrun"
 
-@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
