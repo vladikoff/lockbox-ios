@@ -25,9 +25,25 @@ enum SyncError: Error {
     case DeviceRevoked
 }
 
-enum SyncState {
+enum SyncState: Equatable {
     case NotSyncable, ReadyToSync, Syncing, Synced, Error(error: SyncError)
 
+    public static func == (lhs: SyncState, rhs: SyncState) -> Bool {
+        switch (lhs, rhs) {
+            case (NotSyncable, NotSyncable):
+                return true
+            case (ReadyToSync, ReadyToSync):
+                return true
+            case (Syncing, Syncing):
+                return true
+            case (Synced, Synced):
+                return true
+            case (Error, Error):
+                return true
+            default:
+                return false
+        }
+    }
 }
 
 class DataStore {
@@ -68,21 +84,30 @@ class DataStore {
                 })
                 .disposed(by: self.disposeBag)
 
-        self.registerNotificationCenter()
+        self.syncState.subscribe(onNext: { state in
+            if state == SyncState.Synced {
+                self.updateList()
+            }
+        })
+        .disposed(by: self.disposeBag)
 
+        setInitialSyncState()
+    }
+
+    deinit {
+        unregisterNotificationObservers()
+    }
+
+    private func setInitialSyncState() {
         let state: SyncState
         if !profile.hasSyncableAccount() {
             state = .NotSyncable
         } else {
             state = .ReadyToSync
-            updateList()
         }
 
         syncSubject.onNext(state)
-    }
-
-    deinit {
-        unregisterNotificationObservers()
+        updateList()
     }
 
     public func get(_ id: String) -> Observable<Login?> {
@@ -142,7 +167,6 @@ extension DataStore {
             state = .Syncing
         case NotificationNames.ProfileDidFinishSyncing:
             state = .Synced
-
         default:
             return
         }

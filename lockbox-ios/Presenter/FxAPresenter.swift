@@ -18,7 +18,9 @@ class FxAPresenter {
     fileprivate let fxAActionHandler: FxAActionHandler
     fileprivate let settingActionHandler: SettingActionHandler
     fileprivate let routeActionHandler: RouteActionHandler
+    fileprivate let dataStoreActionHandler: DataStoreActionHandler
     fileprivate let fxaStore: FxAStore
+    fileprivate let dataStore: DataStore
 
     private var disposeBag = DisposeBag()
 
@@ -32,12 +34,16 @@ class FxAPresenter {
          fxAActionHandler: FxAActionHandler = FxAActionHandler.shared,
          settingActionHandler: SettingActionHandler = SettingActionHandler.shared,
          routeActionHandler: RouteActionHandler = RouteActionHandler.shared,
-         fxaStore: FxAStore = FxAStore.shared) {
+         dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared,
+         fxaStore: FxAStore = FxAStore.shared,
+         dataStore: DataStore = DataStore.shared) {
         self.view = view
         self.fxAActionHandler = fxAActionHandler
         self.settingActionHandler = settingActionHandler
         self.routeActionHandler = routeActionHandler
+        self.dataStoreActionHandler = dataStoreActionHandler
         self.fxaStore = fxaStore
+        self.dataStore = dataStore
     }
 
     func onViewReady() {
@@ -77,7 +83,12 @@ class FxAPresenter {
 extension FxAPresenter {
     // The user has signed in to a Firefox Account.  We're done!
     func onLogin(_ data: JSON) {
-        self.routeActionHandler.invoke(MainRouteAction.list)
-        DataStoreActionHandler.shared.invoke(.initialize(blob: data))
+        dataStoreActionHandler.invoke(.initialize(blob: data))
+
+        dataStore.syncState.subscribe(onNext: { state in
+            if state == SyncState.Syncing {
+                self.routeActionHandler.invoke(MainRouteAction.list)
+            }
+        }).disposed(by: disposeBag)
     }
 }
