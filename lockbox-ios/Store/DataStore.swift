@@ -75,6 +75,8 @@ class DataStore {
                     switch action {
                     case let .initialize(blob: data):
                         self.onLogin(data)
+                    case .reset:
+                        self.reset()
                     case .sync:
                         self.onSync()
                     case let .touch(id: id):
@@ -130,6 +132,13 @@ extension DataStore {
 extension DataStore {
     public func onLoginUsage(id: String) {
         profile.logins.addUseOfLoginByGUID(id)
+    }
+}
+
+extension DataStore {
+    public func reset() {
+        FxALoginHelper.sharedInstance.applicationDidDisconnect(UIApplication.shared)
+        self.syncSubject.onNext(.NotSyncable)
     }
 }
 
