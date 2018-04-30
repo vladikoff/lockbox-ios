@@ -29,6 +29,8 @@
 		391233822090E60A00CB0233 /* XCGLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 391233802090E60A00CB0233 /* XCGLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		391233842090E63000CB0233 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 391233832090E63000CB0233 /* Alamofire.framework */; };
 		391233852090E63000CB0233 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 391233832090E63000CB0233 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		391233892092155300CB0233 /* FxASignIn.js in Resources */ = {isa = PBXBuildFile; fileRef = 391233882092155300CB0233 /* FxASignIn.js */; };
+		39B818C4209375C1004FE5AC /* SyncStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B818C3209375C1004FE5AC /* SyncStore.swift */; };
 		39DB366B208E25710026DA92 /* Deferred.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B1508820878E42007497E5 /* Deferred.framework */; };
 		39DB366D208E25710026DA92 /* FxAUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B1508620878E42007497E5 /* FxAUtils.framework */; };
 		39DB3678208E2A800026DA92 /* Account.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB3677208E2A800026DA92 /* Account.framework */; };
@@ -256,8 +258,10 @@
 		3912337B2090E5E200CB0233 /* Sync.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sync.framework; path = Carthage/Build/iOS/Sync.framework; sourceTree = "<group>"; };
 		391233802090E60A00CB0233 /* XCGLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCGLogger.framework; path = Carthage/Build/iOS/XCGLogger.framework; sourceTree = "<group>"; };
 		391233832090E63000CB0233 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		391233882092155300CB0233 /* FxASignIn.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = FxASignIn.js; path = "Carthage/Checkouts/lockbox-ios-fxa-sync/Assets/FxASignIn.js"; sourceTree = SOURCE_ROOT; };
 		39B1508620878E42007497E5 /* FxAUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FxAUtils.framework; path = Carthage/Build/iOS/FxAUtils.framework; sourceTree = "<group>"; };
 		39B1508820878E42007497E5 /* Deferred.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Deferred.framework; path = Carthage/Build/iOS/Deferred.framework; sourceTree = "<group>"; };
+		39B818C3209375C1004FE5AC /* SyncStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStore.swift; sourceTree = "<group>"; };
 		39DB3677208E2A800026DA92 /* Account.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Account.framework; path = Carthage/Build/iOS/Account.framework; sourceTree = "<group>"; };
 		39DB367D208E2F8F0026DA92 /* FxA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FxA.framework; path = Carthage/Build/iOS/FxA.framework; sourceTree = "<group>"; };
 		7AA5404248F72FC87CC4978B /* Date+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
@@ -573,6 +577,7 @@
 				7AA54247F60B5BDC1BA90AD4 /* CopyConfirmationDisplayStore.swift */,
 				7AA54766081BC269C5C33884 /* ItemListDisplayStore.swift */,
 				7AA548F4166A1826238F6589 /* TelemetryStore.swift */,
+				39B818C3209375C1004FE5AC /* SyncStore.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -626,6 +631,7 @@
 				7AA54B40696590744930A579 /* Assets.xcassets */,
 				7AA5406822AB67B669BAF89B /* Info.plist */,
 				7AA54F13767439D644B91C5E /* lockbox-ios-Bridging-Header.h */,
+				391233882092155300CB0233 /* FxASignIn.js */,
 				7AA547418F6E716AEEE385F6 /* Constants.swift */,
 			);
 			path = Resources;
@@ -950,6 +956,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D522EA620334C8200295FF8 /* Localizable.strings in Resources */,
+				391233892092155300CB0233 /* FxASignIn.js in Resources */,
 				7DC75D79206AD01C007CDDBB /* AccountSetting.storyboard in Resources */,
 				D5E2930B207D59050039A0AC /* FiraSans-Italic.ttf in Resources */,
 				7D522E9B20334B8600295FF8 /* Welcome.strings in Resources */,
@@ -1160,6 +1167,7 @@
 				7AA54B00F88A2EF6FDFA2892 /* SettingNavigationController.swift in Sources */,
 				7AA54C0AFF50DFF42D405014 /* SettingAction.swift in Sources */,
 				7AA542395C9C6379C27909B5 /* UserDefaults+.swift in Sources */,
+				39B818C4209375C1004FE5AC /* SyncStore.swift in Sources */,
 				7AA54D3D19DB0AC7D0B59812 /* BiometryManager.swift in Sources */,
 				7AA546B578EBABE3543AB466 /* TelemetryAction.swift in Sources */,
 				7AA541981624DF66E83FFB72 /* ApplicationLifecycleAction.swift in Sources */,

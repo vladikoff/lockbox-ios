@@ -4,6 +4,7 @@
 
 import Foundation
 import RxSwift
+import Account
 
 enum FxADisplayAction: Action {
     case loadInitialURL(url: URL)
@@ -75,6 +76,10 @@ class FxAActionHandler: ActionHandler {
         return components.url!
     }()
 
+    lazy private var signInURL: URL = { [weak self] in
+        return ProductionFirefoxAccountConfiguration().signInURL
+    }()
+
     lazy private var tokenURL: URL = { [weak self] in
         var components = URLComponents()
 
@@ -110,7 +115,7 @@ class FxAActionHandler: ActionHandler {
             return
         }
 
-        self.dispatcher.dispatch(action: FxADisplayAction.loadInitialURL(url: self.authURL))
+        self.dispatcher.dispatch(action: FxADisplayAction.loadInitialURL(url: self.signInURL))
     }
 
     public func matchingRedirectURLReceived(components: URLComponents) {

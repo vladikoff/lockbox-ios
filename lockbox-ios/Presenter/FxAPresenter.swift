@@ -4,8 +4,10 @@
 
 import Foundation
 import WebKit
+import FxAUtils
 import RxSwift
 import RxCocoa
+import SwiftyJSON
 
 protocol FxAViewProtocol: class, ErrorView {
     func loadRequest(_ urlRequest: URLRequest)
@@ -68,5 +70,16 @@ class FxAPresenter {
         }
 
         decisionHandler(.allow)
+    }
+}
+
+// Extensions and enums to support logging in via remote commmand.
+extension FxAPresenter {
+    // The user has signed in to a Firefox Account.  We're done!
+    func onLogin(_ data: JSON) {
+        let app = UIApplication.shared
+        let helper = FxALoginHelper.sharedInstance
+//        helper.delegate = self
+        helper.application(app, didReceiveAccountJSON: data)
     }
 }
