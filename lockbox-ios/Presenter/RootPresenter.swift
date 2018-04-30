@@ -58,7 +58,8 @@ class RootPresenter {
                     switch state {
                     case .NotSyncable:
                         self.routeActionHandler.invoke(LoginRouteAction.welcome)
-                    default: break
+                    default:
+                        self.routeActionHandler.invoke(MainRouteAction.list)
                     }
                 })
                 .disposed(by: self.disposeBag)
