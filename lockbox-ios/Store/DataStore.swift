@@ -7,35 +7,36 @@ import RxSwift
 import RxCocoa
 import RxOptional
 
+enum SyncError: Error {
+    case CryptoInvalidKey
+    case CryptoMissingKey
+    case Crypto
+    case Locked
+    case Offline
+    case Network
+    case NeedAuth
+    case Conflict
+    case AccountDeleted
+    case AccountReset
+    case DeviceRevoked
+}
+
+enum SyncState {
+    case NotSynced, Synced, Error(error: SyncError)
+}
+
 class DataStore {
     public static let shared = DataStore()
-
     fileprivate let disposeBag = DisposeBag()
-    fileprivate var itemList = BehaviorRelay<[String: Item]>(value: [:])
-    fileprivate var initialized = BehaviorRelay<Bool>(value: false)
-    fileprivate var opened = BehaviorRelay<Bool>(value: false)
-    fileprivate var locked = BehaviorRelay<Bool>(value: true)
+    private var listSubject = ReplaySubject<[Item]>.create(bufferSize: 1)
+    private var syncSubject = PublishSubject<SyncState>()
 
-    public var onItemList: Observable<[Item]> {
-        return self.itemList.asObservable()
-                .map { itemDictionary -> [Item] in
-                    return Array(itemDictionary.values)
-                }
-                .distinctUntilChanged { lhList, rhList in
-                    return lhList == rhList
-                }
+    public var list: Observable<[Item]> {
+        return self.listSubject.asObservable()
     }
 
-    public var onInitialized: Observable<Bool> {
-        return self.initialized.asObservable().distinctUntilChanged()
-    }
-
-    public var onOpened: Observable<Bool> {
-        return self.opened.asObservable().distinctUntilChanged()
-    }
-
-    public var onLocked: Observable<Bool> {
-        return self.locked.asObservable().distinctUntilChanged()
+    public var syncState: Observable<SyncState> {
+        return self.syncSubject.asObservable()
     }
 
     init(dispatcher: Dispatcher = Dispatcher.shared) {
@@ -43,38 +44,121 @@ class DataStore {
                 .filterByType(class: DataStoreAction.self)
                 .subscribe(onNext: { action in
                     switch action {
-                    case .list(let list):
-                        self.itemList.accept(list)
-                    case .updated(let item):
-                        self.itemList.take(1)
-                                .map { items in
-                                    guard let id = item.id else {
-                                        return items
-                                    }
-
-                                    var updatedItems = items
-                                    updatedItems[id] = item
-                                    return updatedItems
-                                }
-                                .bind(to: self.itemList)
-                                .disposed(by: self.disposeBag)
-                    case .locked(let locked):
-                        self.locked.accept(locked)
-                    case .initialized(let initialized):
-                        self.initialized.accept(initialized)
-                    case .opened(let opened):
-                        self.opened.accept(opened)
+                    default: break
                     }
                 })
                 .disposed(by: self.disposeBag)
+
+        self.populateTestData()
     }
 
-    public func onItem(_ itemId: String) -> Observable<Item> {
-        return self.itemList.asObservable()
+    public func get(id: String) -> Observable<Item?> {
+        return self.listSubject
                 .map { items -> Item? in
-                    return items[itemId]
-                }
-                .filterNil()
-                .distinctUntilChanged()
+                    return items.filter { item in
+                        return item.id == id
+                     }.first
+                }.asObservable()
+    }
+}
+
+extension DataStore {
+    public func populateTestData() {
+        let items = [
+            Item.Builder()
+                    .title("Amazon")
+                    .origins(["https://amazon.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tjacobson@example.com")
+                            .password("iLUVdawgz")
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Facebook")
+                    .origins(["https://www.facebook.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tanya.jacobson")
+                            .password("iLUVdawgz")
+                            .notes("I just have so much anxiety about using this website that I'm going to write about it in the notes section of my password manager wow") // swiftlint:disable:this line_length
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Reddit")
+                    .origins(["https://reddit.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tjacobson@example.com")
+                            .password("iLUVdawgz")
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Twitter")
+                    .origins(["http://www.twitter.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tjacobson@example.com")
+                            .password("iLUVdawgz")
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Blogspot")
+                    .origins(["https://accounts.google.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tjacobson@example.com")
+                            .password("iLUVdawgz")
+                            .notes("Meditation cloud bread cray, locavore actually chia everyday carry biodiesel venmo. Fashion axe polaroid seitan, put a bird on it stumptown selvage fam mustache thundercats viral. Squid tbh lo-fi celiac ennui occupy offal fam +1 disrupt ethical bushwick. Narwhal freegan man bun yr cray, heirloom try-hard mustache biodiesel. Direct trade tacos next level flexitarian tumeric cronut cornhole, brunch deep v tote bag brooklyn beard whatever gluten-free humblebrag. Cloud bread kale chips beard man braid, thundercats lo-fi forage chicharrones venmo four dollar toast lyft butcher echo park lumbersexual photo booth.") // swiftlint:disable:this line_length
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Chase")
+                    .origins(["https://www.chase.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("jacobsonfamily444")
+                            .password("iLUVdawgz")
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Linkedin")
+                    .origins(["https://www.linkedin.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tanyamjackson@example.com")
+                            .password("iAmAprofessional345!")
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Bank of America")
+                    .origins(["http://www.bankofamerica.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tjacobson735")
+                            .password("iLUVdawgz")
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Comcast")
+                    .origins(["http://www.comcast.net"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tjacobsonlongfamilyusername@example.com")
+                            .password("iLUVdawgz")
+                            .build())
+                    .build(),
+            Item.Builder()
+                    .title("Zee Longest Title of a website you've ever seen")
+                    .origins(["www.verylongdomainthatmayormaynotexistintherealworld.com"])
+                    .entry(ItemEntry.Builder()
+                            .kind("login")
+                            .username("tjacobson")
+                            .password("veryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongpassword") // swiftlint:disable:this line_length
+                            .build())
+                    .build()
+        ]
+
+        self.listSubject.onNext(items)
     }
 }

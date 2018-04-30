@@ -30,7 +30,6 @@
 		391233842090E63000CB0233 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 391233832090E63000CB0233 /* Alamofire.framework */; };
 		391233852090E63000CB0233 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 391233832090E63000CB0233 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		391233892092155300CB0233 /* FxASignIn.js in Resources */ = {isa = PBXBuildFile; fileRef = 391233882092155300CB0233 /* FxASignIn.js */; };
-		39B818C4209375C1004FE5AC /* SyncStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B818C3209375C1004FE5AC /* SyncStore.swift */; };
 		39DB366B208E25710026DA92 /* Deferred.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B1508820878E42007497E5 /* Deferred.framework */; };
 		39DB366D208E25710026DA92 /* FxAUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39B1508620878E42007497E5 /* FxAUtils.framework */; };
 		39DB3678208E2A800026DA92 /* Account.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB3677208E2A800026DA92 /* Account.framework */; };
@@ -47,7 +46,6 @@
 		7AA541ED07A75F27A211819B /* AccountSettingViewSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54E25FB7C712ECE1069E5 /* AccountSettingViewSpec.swift */; };
 		7AA542395C9C6379C27909B5 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54D3C8D454F79BD580AAF /* UserDefaults+.swift */; };
 		7AA54306397C76D229BA199A /* SettingActionSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA549951B0D1648DBA0F253 /* SettingActionSpec.swift */; };
-		7AA5435895EE131D6B5BD4ED /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA5450E45A4DB17626F4684 /* WebView.swift */; };
 		7AA5439445A0DE14E73A038A /* DataStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA5439EEDE4AB222842E7C8 /* DataStoreSpec.swift */; };
 		7AA543A00DEEDF6947B578EC /* UserInfoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54146E0C9269A0CE8D53A /* UserInfoStore.swift */; };
 		7AA543D2B55F2968B976F8EF /* OAuthInfoSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA544EC2E10034239FCB256 /* OAuthInfoSpec.swift */; };
@@ -126,7 +124,6 @@
 		7AA54EC7A9CA9BBD57AFEAF9 /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54B0FC602D0A79D87D3BD /* FilterCell.swift */; };
 		7AA54EEAB64EF8D9A7F48739 /* CopyConfirmationDisplayStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA543307459610B170AFBD5 /* CopyConfirmationDisplayStoreSpec.swift */; };
 		7AA54EFFC095AB3BC0BD1437 /* KeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA5429D9DF4FAE7E3290C8E /* KeyManager.swift */; };
-		7AA54F0C6779D207AC3DA3E5 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA5445C1077C84873E7CB1C /* Parser.swift */; };
 		7AA54FF1E300E6DEEFD77717 /* UIColor+Spec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54EDDE9ECFDD6DFC4DEC5 /* UIColor+Spec.swift */; };
 		7D0D0EDD1F9A5CE2007D8960 /* ItemSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0D0EDC1F9A5CE2007D8960 /* ItemSpec.swift */; };
 		7D1B1ACE1F9902A500C1F5FF /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D1B1A8B1F98F86400C1F5FF /* Nimble.framework */; };
@@ -140,9 +137,7 @@
 		7D302BE81FD7106B00D2FD4B /* RxBlocking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DF469C71F9F8FD500375C74 /* RxBlocking.framework */; };
 		7D302BE91FD7108300D2FD4B /* RxBlocking.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7DF469C71F9F8FD500375C74 /* RxBlocking.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7D30DBB32033651600613B69 /* EmptyList.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7D30DBB52033651600613B69 /* EmptyList.xib */; };
-		7D38849B1F992A0B0058DAFF /* WebViewSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D38849A1F992A0B0058DAFF /* WebViewSpec.swift */; };
 		7D38849C1F99374F0058DAFF /* lockbox-datastore in Resources */ = {isa = PBXBuildFile; fileRef = 7D1B1A991F98FC0600C1F5FF /* lockbox-datastore */; };
-		7D3884A21F9A54D90058DAFF /* ParserSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3884A11F9A54D90058DAFF /* ParserSpec.swift */; };
 		7D3920271FB131FB00709575 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3920231FB131FB00709575 /* libcrypto.a */; };
 		7D3920281FB131FB00709575 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3920241FB131FB00709575 /* libssl.a */; };
 		7D3920291FB131FB00709575 /* libjansson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D3920251FB131FB00709575 /* libjansson.a */; };
@@ -261,7 +256,6 @@
 		391233882092155300CB0233 /* FxASignIn.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = FxASignIn.js; path = "Carthage/Checkouts/lockbox-ios-fxa-sync/Assets/FxASignIn.js"; sourceTree = SOURCE_ROOT; };
 		39B1508620878E42007497E5 /* FxAUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FxAUtils.framework; path = Carthage/Build/iOS/FxAUtils.framework; sourceTree = "<group>"; };
 		39B1508820878E42007497E5 /* Deferred.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Deferred.framework; path = Carthage/Build/iOS/Deferred.framework; sourceTree = "<group>"; };
-		39B818C3209375C1004FE5AC /* SyncStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncStore.swift; sourceTree = "<group>"; };
 		39DB3677208E2A800026DA92 /* Account.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Account.framework; path = Carthage/Build/iOS/Account.framework; sourceTree = "<group>"; };
 		39DB367D208E2F8F0026DA92 /* FxA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FxA.framework; path = Carthage/Build/iOS/FxA.framework; sourceTree = "<group>"; };
 		7AA5404248F72FC87CC4978B /* Date+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
@@ -295,12 +289,10 @@
 		7AA5439EEDE4AB222842E7C8 /* DataStoreSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStoreSpec.swift; sourceTree = "<group>"; };
 		7AA5444E03C80B7A8A0E4EE5 /* String+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		7AA5445B47B7A548F0F0E294 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
-		7AA5445C1077C84873E7CB1C /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		7AA544D5B320BB5C55723EB0 /* TelemetryActionSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TelemetryActionSpec.swift; sourceTree = "<group>"; };
 		7AA544DC0DBB5D050BD54806 /* FxAPresenterSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FxAPresenterSpec.swift; sourceTree = "<group>"; };
 		7AA544EC2E10034239FCB256 /* OAuthInfoSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthInfoSpec.swift; sourceTree = "<group>"; };
 		7AA544F9FCD826257AD023E7 /* ItemListDisplayStoreSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemListDisplayStoreSpec.swift; sourceTree = "<group>"; };
-		7AA5450E45A4DB17626F4684 /* WebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		7AA54549204186237036B464 /* DataStoreAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStoreAction.swift; sourceTree = "<group>"; };
 		7AA545541FB802B047FACA4C /* ApplicationLifecycleActionSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationLifecycleActionSpec.swift; sourceTree = "<group>"; };
 		7AA5455D02519DBA3D3711A9 /* OAuthInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthInfo.swift; sourceTree = "<group>"; };
@@ -380,8 +372,6 @@
 		7D30DBB92033651A00613B69 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/EmptyList.strings; sourceTree = "<group>"; };
 		7D30DBBB2033651B00613B69 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/EmptyList.strings; sourceTree = "<group>"; };
 		7D320B3420360F9000891F73 /* RxDataSources.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxDataSources.framework; path = Carthage/Build/iOS/RxDataSources.framework; sourceTree = "<group>"; };
-		7D38849A1F992A0B0058DAFF /* WebViewSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewSpec.swift; sourceTree = "<group>"; };
-		7D3884A11F9A54D90058DAFF /* ParserSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParserSpec.swift; sourceTree = "<group>"; };
 		7D3920231FB131FB00709575 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "lockbox-ios/binaries/libcrypto.a"; sourceTree = "<group>"; };
 		7D3920241FB131FB00709575 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "lockbox-ios/binaries/libssl.a"; sourceTree = "<group>"; };
 		7D3920251FB131FB00709575 /* libjansson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjansson.a; path = "lockbox-ios/binaries/libjansson.a"; sourceTree = "<group>"; };
@@ -577,7 +567,6 @@
 				7AA54247F60B5BDC1BA90AD4 /* CopyConfirmationDisplayStore.swift */,
 				7AA54766081BC269C5C33884 /* ItemListDisplayStore.swift */,
 				7AA548F4166A1826238F6589 /* TelemetryStore.swift */,
-				39B818C3209375C1004FE5AC /* SyncStore.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -585,7 +574,6 @@
 		7AA545D81CFDA7E54485C845 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				7AA5445C1077C84873E7CB1C /* Parser.swift */,
 				7AA5429D9DF4FAE7E3290C8E /* KeyManager.swift */,
 				7AA54ECD9692A1A74FC877A4 /* KeychainManager.swift */,
 				7AA5408D5D52952F11E20EEC /* BiometryManager.swift */,
@@ -660,7 +648,6 @@
 				7AA5444E03C80B7A8A0E4EE5 /* String+.swift */,
 				7AA542F5012A5D2E954E030A /* Data+.swift */,
 				7AA542656FC3BE06479C929A /* UIViewController+.swift */,
-				7AA5450E45A4DB17626F4684 /* WebView.swift */,
 				7AA54FE4F9D6DAEF984F63E6 /* Observable+.swift */,
 				7AA542A3362BE85B313A88B8 /* UIImage+.swift */,
 				7AA5404248F72FC87CC4978B /* Date+.swift */,
@@ -740,8 +727,6 @@
 				7D44088D20178713001873F6 /* WelcomeViewSpec.swift */,
 				7D1B1AC81F99028D00C1F5FF /* Info.plist */,
 				7D1B1AD31F9902C600C1F5FF /* DataStoreActionSpec.swift */,
-				7D38849A1F992A0B0058DAFF /* WebViewSpec.swift */,
-				7D3884A11F9A54D90058DAFF /* ParserSpec.swift */,
 				7D0D0EDC1F9A5CE2007D8960 /* ItemSpec.swift */,
 				7D88BD451F9A6F5B0082A838 /* ItemEntrySpec.swift */,
 				7D39202B1FB215EB00709575 /* KeyManagerSpec.swift */,
@@ -1036,11 +1021,9 @@
 			files = (
 				7DA4C68D2028F99200B61DD8 /* ItemListViewSpec.swift in Sources */,
 				7D88BD461F9A6F5B0082A838 /* ItemEntrySpec.swift in Sources */,
-				7D38849B1F992A0B0058DAFF /* WebViewSpec.swift in Sources */,
 				7D39202C1FB215EB00709575 /* KeyManagerSpec.swift in Sources */,
 				D831FEE5205C522200EAE19A /* SettingListPresenterSpec.swift in Sources */,
 				7D1B1AD41F9902C600C1F5FF /* DataStoreActionSpec.swift in Sources */,
-				7D3884A21F9A54D90058DAFF /* ParserSpec.swift in Sources */,
 				7D44088F20178713001873F6 /* WelcomeViewSpec.swift in Sources */,
 				7D0D0EDD1F9A5CE2007D8960 /* ItemSpec.swift in Sources */,
 				7AA545A229A2E0E5DBF7461C /* String+Spec.swift in Sources */,
@@ -1119,8 +1102,6 @@
 				7AA54C6D0A4BEB2C3900424F /* Data+.swift in Sources */,
 				7AA5475B74B7DF69096101CE /* UIViewController+.swift in Sources */,
 				7D44088B201786F1001873F6 /* WelcomePresenter.swift in Sources */,
-				7AA5435895EE131D6B5BD4ED /* WebView.swift in Sources */,
-				7AA54F0C6779D207AC3DA3E5 /* Parser.swift in Sources */,
 				7AA54EFFC095AB3BC0BD1437 /* KeyManager.swift in Sources */,
 				7AA54CB0835678A0038E5424 /* RouteAction.swift in Sources */,
 				7AA548263012DE1D03950DE0 /* RouteStore.swift in Sources */,
@@ -1167,7 +1148,6 @@
 				7AA54B00F88A2EF6FDFA2892 /* SettingNavigationController.swift in Sources */,
 				7AA54C0AFF50DFF42D405014 /* SettingAction.swift in Sources */,
 				7AA542395C9C6379C27909B5 /* UserDefaults+.swift in Sources */,
-				39B818C4209375C1004FE5AC /* SyncStore.swift in Sources */,
 				7AA54D3D19DB0AC7D0B59812 /* BiometryManager.swift in Sources */,
 				7AA546B578EBABE3543AB466 /* TelemetryAction.swift in Sources */,
 				7AA541981624DF66E83FFB72 /* ApplicationLifecycleAction.swift in Sources */,

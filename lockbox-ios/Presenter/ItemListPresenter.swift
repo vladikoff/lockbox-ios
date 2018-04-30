@@ -104,7 +104,7 @@ class ItemListPresenter {
     }
 
     func onViewReady() {
-        let itemListObservable = self.dataStore.onItemList
+        let itemListObservable = self.dataStore.list
                 .do(onNext: { items in
                     if items.isEmpty {
                         self.view?.displayEmptyStateMessaging()
