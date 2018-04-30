@@ -3,9 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
+import FxAUtils
 import RxSwift
 import RxCocoa
 import RxOptional
+import Shared
+import Storage
+import SwiftyJSON
 
 enum SyncError: Error {
     case CryptoInvalidKey
@@ -22,16 +26,20 @@ enum SyncError: Error {
 }
 
 enum SyncState {
-    case NotSynced, Synced, Error(error: SyncError)
+    case NotSyncable, ReadyToSync, Syncing, Synced, Error(error: SyncError)
+
 }
 
 class DataStore {
     public static let shared = DataStore()
     fileprivate let disposeBag = DisposeBag()
-    private var listSubject = ReplaySubject<[Item]>.create(bufferSize: 1)
+    private var listSubject = ReplaySubject<[Login]>.create(bufferSize: 1)
     private var syncSubject = ReplaySubject<SyncState>.create(bufferSize: 1)
 
-    public var list: Observable<[Item]> {
+    private var profile: Profile
+    private var notificationObservers: [NSObjectProtocol]?
+
+    public var list: Observable<[Login]> {
         return self.listSubject.asObservable()
     }
 
@@ -40,17 +48,38 @@ class DataStore {
     }
 
     init(dispatcher: Dispatcher = Dispatcher.shared) {
+        profile = BrowserProfile(localName: "lockbox-profile")
+        FxALoginHelper.sharedInstance.application(UIApplication.shared, didLoadProfile: profile)
+
+        let state: SyncState
+        if !profile.hasSyncableAccount() {
+            state = .NotSyncable
+        } else {
+            state = .ReadyToSync
+        }
+
+        syncSubject.onNext(state)
+        registerNotificationCenter()
+
         dispatcher.register
                 .filterByType(class: DataStoreAction.self)
                 .subscribe(onNext: { action in
                     switch action {
+                    case let .initialize(blob: data):
+                        self.onLogin(data)
+                    case .sync:
+                        self.onSync()
                     default: break
                     }
                 })
                 .disposed(by: self.disposeBag)
 
-        self.syncSubject.onNext(.NotSynced)
         self.populateTestData()
+        self.registerNotificationCenter()
+    }
+
+    deinit {
+        unregisterNotificationObservers()
     }
 
     public func get(_ id: String) -> Observable<Item?> {
@@ -161,5 +190,61 @@ extension DataStore {
         ]
 
         self.listSubject.onNext(items)
+    }
+}
+
+extension DataStore {
+    public func onLogin(_ data: JSON) {
+        let helper = FxALoginHelper.sharedInstance
+        helper.application(UIApplication.shared, didReceiveAccountJSON: data)
+    }
+}
+
+extension DataStore {
+    public func onSync() {
+        profile.syncManager.syncEverything(why: .syncNow)
+    }
+
+    private func registerNotificationCenter() {
+        guard notificationObservers == nil else {
+            return
+        }
+        let names: [Notification.Name] = [NotificationNames.FirefoxAccountVerified,
+                                          NotificationNames.ProfileDidStartSyncing,
+                                          NotificationNames.ProfileDidFinishSyncing
+        ]
+        notificationObservers = names.map { name in
+            return NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main, using: updateSyncState(from:))
+        }
+    }
+
+    private func unregisterNotificationObservers() {
+        notificationObservers?.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
+        notificationObservers = nil
+    }
+
+    private func updateSyncState(from notification: Notification) {
+        let state: SyncState
+        switch notification.name {
+        case NotificationNames.FirefoxAccountVerified:
+            state = .ReadyToSync
+        case NotificationNames.ProfileDidStartSyncing:
+            state = .Syncing
+        case NotificationNames.ProfileDidFinishSyncing:
+            state = .Synced
+
+        default:
+            return
+        }
+        syncSubject.onNext(state)
+    }
+
+    private func updateList() {
+        let logins = profile.logins
+        logins.getAllLogins() >>== { (cursor: Cursor<Login>) in
+            self.listSubject.onNext(cursor.asArray())
+        }
     }
 }

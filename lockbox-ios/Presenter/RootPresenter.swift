@@ -56,7 +56,7 @@ class RootPresenter {
         self.dataStore.syncState
                 .subscribe(onNext: { state in
                     switch state {
-                    case .NotSynced:
+                    case .NotSyncable:
                         self.routeActionHandler.invoke(LoginRouteAction.welcome)
                     default: break
                     }

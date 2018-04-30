@@ -17,8 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions
                      launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
-        profile = BrowserProfile(localName: "lockbox-profile")
-        FxALoginHelper.sharedInstance.application(application, didLoadProfile: profile)
+
         return true
     }
 

@@ -77,10 +77,6 @@ class FxAPresenter {
 extension FxAPresenter {
     // The user has signed in to a Firefox Account.  We're done!
     func onLogin(_ data: JSON) {
-        let app = UIApplication.shared
-        let helper = FxALoginHelper.sharedInstance
-//        helper.delegate = self
-        helper.application(app, didReceiveAccountJSON: data)
         self.routeActionHandler.invoke(MainRouteAction.list)
         DataStoreActionHandler.shared.invoke(.initialize(blob: data))
     }
