@@ -30,18 +30,18 @@ enum SyncState: Equatable {
 
     public static func == (lhs: SyncState, rhs: SyncState) -> Bool {
         switch (lhs, rhs) {
-            case (NotSyncable, NotSyncable):
-                return true
-            case (ReadyToSync, ReadyToSync):
-                return true
-            case (Syncing, Syncing):
-                return true
-            case (Synced, Synced):
-                return true
-            case (Error, Error):
-                return true
-            default:
-                return false
+        case (NotSyncable, NotSyncable):
+            return true
+        case (ReadyToSync, ReadyToSync):
+            return true
+        case (Syncing, Syncing):
+            return true
+        case (Synced, Synced):
+            return true
+        case (Error, Error):
+            return true
+        default:
+            return false
         }
     }
 }
@@ -65,6 +65,7 @@ class DataStore {
 
     init(dispatcher: Dispatcher = Dispatcher.shared) {
         profile = BrowserProfile(localName: "lockbox-profile")
+        profile.syncManager.applicationDidBecomeActive()
         FxALoginHelper.sharedInstance.application(UIApplication.shared, didLoadProfile: profile)
 
         registerNotificationCenter()
