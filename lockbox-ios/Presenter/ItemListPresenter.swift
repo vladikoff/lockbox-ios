@@ -6,6 +6,8 @@ import Foundation
 import RxSwift
 import RxCocoa
 import RxDataSources
+import Storage
+import Shared
 
 protocol ItemListViewProtocol: class, AlertControllerView {
     func bind(items: Driver<[ItemSectionModel]>)
@@ -14,15 +16,15 @@ protocol ItemListViewProtocol: class, AlertControllerView {
     func hideEmptyStateMessaging()
 }
 
-struct ItemListTextSort {
-    let items: [Item]
+struct LoginListTextSort {
+    let logins: [Login]
     let text: String
     let sortingOption: ItemListSortingAction
 }
 
-extension ItemListTextSort: Equatable {
-    static func ==(lhs: ItemListTextSort, rhs: ItemListTextSort) -> Bool {
-        return lhs.items == rhs.items &&
+extension LoginListTextSort: Equatable {
+    static func ==(lhs: LoginListTextSort, rhs: LoginListTextSort) -> Bool {
+        return lhs.logins == rhs.logins &&
                 lhs.text == rhs.text &&
                 lhs.sortingOption == rhs.sortingOption
     }
@@ -123,7 +125,7 @@ class ItemListPresenter {
                 .filterByType(class: ItemListFilterAction.self)
 
         let listDriver = self.createItemListDriver(
-                itemListObservable: itemListObservable,
+                loginListObservable: itemListObservable,
                 filterTextObservable: filterTextObservable,
                 itemSortObservable: itemSortObservable
         )
@@ -149,24 +151,22 @@ class ItemListPresenter {
 }
 
 extension ItemListPresenter {
-    fileprivate func createItemListDriver(itemListObservable: Observable<[Item]>,
+    fileprivate func createItemListDriver(loginListObservable: Observable<[Login]>,
                                           filterTextObservable: Observable<ItemListFilterAction>,
                                           itemSortObservable: Observable<ItemListSortingAction>) -> Driver<[ItemSectionModel]> { // swiftlint:disable:this line_length
-        return Observable.combineLatest(itemListObservable, filterTextObservable, itemSortObservable)
-                .map { (latest: ([Item], ItemListFilterAction, ItemListSortingAction)) -> ItemListTextSort in
-                    return ItemListTextSort(items: latest.0, text: latest.1.filteringText, sortingOption: latest.2)
+        return Observable.combineLatest(loginListObservable, filterTextObservable, itemSortObservable)
+                .map { (latest: ([Login], ItemListFilterAction, ItemListSortingAction)) -> LoginListTextSort in
+                    return LoginListTextSort(logins: latest.0, text: latest.1.filteringText, sortingOption: latest.2)
                 }
                 .distinctUntilChanged()
-                .map { (latest: ItemListTextSort) -> [Item] in
-                    let baseDate = Date(timeIntervalSince1970: 0)
-
-                    return self.filterItemsForText(latest.text, items: latest.items)
+                .map { (latest: LoginListTextSort) -> [Login] in
+                    return self.filterItemsForText(latest.text, items: latest.logins)
                             .sorted { lhs, rhs -> Bool in
                                 switch latest.sortingOption {
                                 case .alphabetically:
-                                    return lhs.title ?? "" < rhs.title ?? ""
+                                    return lhs.hostname < rhs.hostname
                                 case .recentlyUsed:
-                                    return lhs.lastUsedDate ?? baseDate > rhs.lastUsedDate ?? baseDate
+                                    return lhs.timeLastUsed > rhs.timeLastUsed
                                 }
                             }
                 }
@@ -176,27 +176,27 @@ extension ItemListPresenter {
                 .asDriver(onErrorJustReturn: [])
     }
 
-    fileprivate func configurationsFromItems(_ items: [Item]) -> [ItemListCellConfiguration] {
-        let searchCell = [ItemListCellConfiguration.Search]
+    fileprivate func configurationsFromItems(_ items: [Login]) -> [LoginListCellConfiguration] {
+        let searchCell = [LoginListCellConfiguration.Search]
 
-        let itemCells = items.map { item -> ItemListCellConfiguration in
-            let titleText = item.title ?? ""
-            let usernameEmpty = item.entry.username == "" || item.entry.username == nil
-            let usernameText = usernameEmpty ? Constant.string.usernamePlaceholder : item.entry.username!
+        let loginCells = items.map { login -> LoginListCellConfiguration in
+            let titleText = login.hostname
+            let usernameEmpty = login.username == "" || login.username == nil
+            let usernameText = usernameEmpty ? Constant.string.usernamePlaceholder : login.username!
 
-            return ItemListCellConfiguration.Item(title: titleText, username: usernameText, id: item.id)
+            return LoginListCellConfiguration.Item(title: titleText, username: usernameText, guid: login.guid)
         }
 
-        return searchCell + itemCells
+        return searchCell + loginCells
     }
 
-    fileprivate func filterItemsForText(_ text: String, items: [Item]) -> [Item] {
+    fileprivate func filterItemsForText(_ text: String, items: [Login]) -> [Login] {
         if text.isEmpty {
             return items
         }
 
         return items.filter { item -> Bool in
-            return [item.entry.username, item.origins.first, item.title]
+            return [item.username, item.hostname]
                     .compactMap {
                         $0?.localizedCaseInsensitiveContains(text) ?? false
                     }

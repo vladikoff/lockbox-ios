@@ -6,6 +6,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 import RxDataSources
+import Storage
 
 protocol ItemDetailViewProtocol: class, StatusAlertView {
     var itemId: String { get }
@@ -54,10 +55,10 @@ class ItemDetailPresenter {
                             var field = CopyField.username
                             var text = ""
                             if value == Constant.string.username {
-                                text = item?.entry.username ?? ""
+                                text = item?.username ?? ""
                                 field = CopyField.username
                             } else if value == Constant.string.password {
-                                text = item?.entry.password ?? ""
+                                text = item?.password ?? ""
                                 field = CopyField.password
                             }
 
@@ -69,7 +70,7 @@ class ItemDetailPresenter {
                 target.dataStore.get(self.view?.itemId ?? "")
                         .take(1)
                         .subscribe(onNext: { item in
-                            if let origin = item?.origins.first {
+                            if let origin = item?.formSubmitURL {
                                 target.externalLinkActionHandler.invoke(ExternalLinkAction(url: origin))
                             }
                         })
@@ -103,19 +104,19 @@ class ItemDetailPresenter {
     func onViewReady() {
         let itemObservable = self.dataStore.get(self.view?.itemId ?? "")
 
-        let itemDriver = itemObservable.asDriver(onErrorJustReturn: Item.Builder().build())
+        let itemDriver = itemObservable.asDriver(onErrorJustReturn: nil)
         let viewConfigDriver = Driver.combineLatest(itemDriver, self.itemDetailStore.itemDetailDisplay)
                 .map { e -> [ItemDetailSectionModel] in
                     if case let .togglePassword(passwordDisplayed) = e.1 {
-                        return self.configurationForItem(e.0, passwordDisplayed: passwordDisplayed)
+                        return self.configurationForLogin(e.0, passwordDisplayed: passwordDisplayed)
                     }
 
-                    return self.configurationForItem(e.0, passwordDisplayed: false)
+                    return self.configurationForLogin(e.0, passwordDisplayed: false)
                 }
 
         let titleDriver = itemObservable
                 .map { item -> String in
-                    return item?.title ?? item?.origins.first ?? Constant.string.unnamedEntry
+                    return item?.hostname ?? Constant.string.unnamedEntry
                 }.asDriver(onErrorJustReturn: Constant.string.unnamedEntry)
 
         self.view?.bind(itemDetail: viewConfigDriver)
@@ -138,9 +139,9 @@ class ItemDetailPresenter {
 
 // helpers
 extension ItemDetailPresenter {
-    private func configurationForItem(_ item: Item?, passwordDisplayed: Bool) -> [ItemDetailSectionModel] {
+    private func configurationForLogin(_ login: Login?, passwordDisplayed: Bool) -> [ItemDetailSectionModel] {
         var passwordText: String
-        let itemPassword: String = item?.entry.password ?? ""
+        let itemPassword: String = login?.password ?? ""
 
         if passwordDisplayed {
             passwordText = itemPassword
@@ -152,7 +153,7 @@ extension ItemDetailPresenter {
             ItemDetailSectionModel(model: 0, items: [
                 ItemDetailCellConfiguration(
                         title: Constant.string.webAddress,
-                        value: item?.origins.first ?? "",
+                        value: login?.formSubmitURL ?? "",
                         password: false,
                         size: 16,
                         valueFontColor: Constant.color.lockBoxBlue)
@@ -160,7 +161,7 @@ extension ItemDetailPresenter {
             ItemDetailSectionModel(model: 1, items: [
                 ItemDetailCellConfiguration(
                         title: Constant.string.username,
-                        value: item?.entry.username ?? "",
+                        value: login?.username ?? "",
                         password: false,
                         size: 16),
                 ItemDetailCellConfiguration(

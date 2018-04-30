@@ -82,11 +82,11 @@ class DataStore {
         unregisterNotificationObservers()
     }
 
-    public func get(_ id: String) -> Observable<Item?> {
+    public func get(_ id: String) -> Observable<Login?> {
         return self.listSubject
-                .map { items -> Item? in
+                .map { items -> Login? in
                     return items.filter { item in
-                        return item.id == id
+                        return item.guid == id
                      }.first
                 }.asObservable()
     }
@@ -189,7 +189,7 @@ extension DataStore {
                     .build()
         ]
 
-        self.listSubject.onNext(items)
+//        self.listSubject.onNext(items)
     }
 }
 

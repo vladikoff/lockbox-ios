@@ -7,14 +7,14 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
-typealias ItemSectionModel = AnimatableSectionModel<Int, ItemListCellConfiguration>
+typealias ItemSectionModel = AnimatableSectionModel<Int, LoginListCellConfiguration>
 
-enum ItemListCellConfiguration {
+enum LoginListCellConfiguration {
     case Search
-    case Item(title: String, username: String, id: String?)
+    case Item(title: String, username: String, guid: String?)
 }
 
-extension ItemListCellConfiguration: IdentifiableType {
+extension LoginListCellConfiguration: IdentifiableType {
     var identity: String {
         switch self {
         case .Search:
@@ -25,8 +25,8 @@ extension ItemListCellConfiguration: IdentifiableType {
     }
 }
 
-extension ItemListCellConfiguration: Equatable {
-    static func ==(lhs: ItemListCellConfiguration, rhs: ItemListCellConfiguration) -> Bool {
+extension LoginListCellConfiguration: Equatable {
+    static func ==(lhs: LoginListCellConfiguration, rhs: LoginListCellConfiguration) -> Bool {
         switch (lhs, rhs) {
         case (.Search, .Search): return true
         case (.Item(let lhTitle, let lhUsername, _), .Item(let rhTitle, let rhUsername, _)):
