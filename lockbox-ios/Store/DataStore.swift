@@ -29,7 +29,7 @@ class DataStore {
     public static let shared = DataStore()
     fileprivate let disposeBag = DisposeBag()
     private var listSubject = ReplaySubject<[Item]>.create(bufferSize: 1)
-    private var syncSubject = PublishSubject<SyncState>()
+    private var syncSubject = ReplaySubject<SyncState>.create(bufferSize: 1)
 
     public var list: Observable<[Item]> {
         return self.listSubject.asObservable()
@@ -49,10 +49,11 @@ class DataStore {
                 })
                 .disposed(by: self.disposeBag)
 
+        self.syncSubject.onNext(.NotSynced)
         self.populateTestData()
     }
 
-    public func get(id: String) -> Observable<Item?> {
+    public func get(_ id: String) -> Observable<Item?> {
         return self.listSubject
                 .map { items -> Item? in
                     return items.filter { item in

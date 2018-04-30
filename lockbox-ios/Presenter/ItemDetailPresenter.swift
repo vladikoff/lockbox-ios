@@ -48,28 +48,28 @@ class ItemDetailPresenter {
             let itemId = target.view?.itemId ?? ""
 
             if copyableFields.contains(value) {
-                target.dataStore.onItem(itemId)
+                target.dataStore.get(itemId)
                         .take(1)
                         .subscribe(onNext: { item in
                             var field = CopyField.username
                             var text = ""
                             if value == Constant.string.username {
-                                text = item.entry.username ?? ""
+                                text = item?.entry.username ?? ""
                                 field = CopyField.username
                             } else if value == Constant.string.password {
-                                text = item.entry.password ?? ""
+                                text = item?.entry.password ?? ""
                                 field = CopyField.password
                             }
 
-                            target.dataStoreActionHandler.touch(item)
+                            target.dataStoreActionHandler.invoke(.touch(id: itemId))
                             target.copyActionHandler.invoke(CopyAction(text: text, field: field, itemID: itemId))
                         })
                         .disposed(by: target.disposeBag)
             } else if value == Constant.string.webAddress {
-                target.dataStore.onItem(self.view?.itemId ?? "")
+                target.dataStore.get(self.view?.itemId ?? "")
                         .take(1)
                         .subscribe(onNext: { item in
-                            if let origin = item.origins.first {
+                            if let origin = item?.origins.first {
                                 target.externalLinkActionHandler.invoke(ExternalLinkAction(url: origin))
                             }
                         })
@@ -101,7 +101,7 @@ class ItemDetailPresenter {
     }
 
     func onViewReady() {
-        let itemObservable = self.dataStore.onItem(self.view?.itemId ?? "")
+        let itemObservable = self.dataStore.get(self.view?.itemId ?? "")
 
         let itemDriver = itemObservable.asDriver(onErrorJustReturn: Item.Builder().build())
         let viewConfigDriver = Driver.combineLatest(itemDriver, self.itemDetailStore.itemDetailDisplay)
@@ -115,7 +115,7 @@ class ItemDetailPresenter {
 
         let titleDriver = itemObservable
                 .map { item -> String in
-                    return item.title ?? item.origins.first ?? Constant.string.unnamedEntry
+                    return item?.title ?? item?.origins.first ?? Constant.string.unnamedEntry
                 }.asDriver(onErrorJustReturn: Constant.string.unnamedEntry)
 
         self.view?.bind(itemDetail: viewConfigDriver)
@@ -138,9 +138,9 @@ class ItemDetailPresenter {
 
 // helpers
 extension ItemDetailPresenter {
-    private func configurationForItem(_ item: Item, passwordDisplayed: Bool) -> [ItemDetailSectionModel] {
+    private func configurationForItem(_ item: Item?, passwordDisplayed: Bool) -> [ItemDetailSectionModel] {
         var passwordText: String
-        let itemPassword: String = item.entry.password ?? ""
+        let itemPassword: String = item?.entry.password ?? ""
 
         if passwordDisplayed {
             passwordText = itemPassword
@@ -148,11 +148,11 @@ extension ItemDetailPresenter {
             passwordText = itemPassword.replacingOccurrences(of: "[^\\s]", with: "•", options: .regularExpression)
         }
 
-        var sectionModels = [
+        let sectionModels = [
             ItemDetailSectionModel(model: 0, items: [
                 ItemDetailCellConfiguration(
                         title: Constant.string.webAddress,
-                        value: item.origins.first ?? "",
+                        value: item?.origins.first ?? "",
                         password: false,
                         size: 16,
                         valueFontColor: Constant.color.lockBoxBlue)
@@ -160,7 +160,7 @@ extension ItemDetailPresenter {
             ItemDetailSectionModel(model: 1, items: [
                 ItemDetailCellConfiguration(
                         title: Constant.string.username,
-                        value: item.entry.username ?? "",
+                        value: item?.entry.username ?? "",
                         password: false,
                         size: 16),
                 ItemDetailCellConfiguration(
@@ -170,18 +170,6 @@ extension ItemDetailPresenter {
                         size: 16)
             ])
         ]
-
-        if let notes = item.entry.notes, !notes.isEmpty {
-            let notesSectionModel = ItemDetailSectionModel(model: 2, items: [
-                ItemDetailCellConfiguration(
-                        title: Constant.string.notes,
-                        value: notes,
-                        password: false,
-                        size: 14)
-            ])
-
-            sectionModels.append(notesSectionModel)
-        }
 
         return sectionModels
     }
