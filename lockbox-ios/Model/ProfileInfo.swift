@@ -8,9 +8,9 @@ class ProfileInfo: Codable {
     var uid: String
     var email: String
     var displayName: String?
-    var avatar: String?
+    var avatar: URL?
 
-    init(uid: String, email: String, displayName: String? = nil, avatar: String? = nil) {
+    init(uid: String, email: String, displayName: String? = nil, avatar: URL? = nil) {
         self.uid = uid
         self.email = email
         self.displayName = displayName
@@ -50,7 +50,7 @@ class ProfileInfo: Codable {
             return self
         }
 
-        func avatar(_ avatar: String?) -> Builder {
+        func avatar(_ avatar: URL?) -> Builder {
             self.info.avatar = avatar
             return self
         }

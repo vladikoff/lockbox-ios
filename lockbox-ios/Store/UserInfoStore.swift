@@ -67,7 +67,11 @@ extension UserInfoStore {
     private func populateInitialValues() {
         if let email = self.keychainManager.retrieve(.email),
            let uid = self.keychainManager.retrieve(.uid) {
-            let avatarURL = self.keychainManager.retrieve(.avatarURL)
+            var avatarURL: URL?
+            if let avatarString = self.keychainManager.retrieve(.avatarURL) {
+                avatarURL = URL(string: avatarString)
+            }
+
             let displayName = self.keychainManager.retrieve(.displayName)
 
             self._profileInfo.onNext(
@@ -118,7 +122,8 @@ extension UserInfoStore {
         }
 
         if let avatar = info.avatar {
-            success = success && self.keychainManager.save(avatar, identifier: .avatarURL)
+            let avatarString = avatar.absoluteString
+            success = success && self.keychainManager.save(avatarString, identifier: .avatarURL)
         }
 
         return success

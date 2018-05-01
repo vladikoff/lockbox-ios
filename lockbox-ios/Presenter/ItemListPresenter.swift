@@ -107,6 +107,7 @@ class ItemListPresenter {
 
     func onViewReady() {
         let itemListObservable = self.dataStore.list
+                .asDriver(onErrorJustReturn: [])
                 .do(onNext: { items in
                     if items.isEmpty {
                         self.view?.displayEmptyStateMessaging()
@@ -114,6 +115,7 @@ class ItemListPresenter {
                         self.view?.hideEmptyStateMessaging()
                     }
                 })
+                .asObservable()
                 .filter { items in
                     return !items.isEmpty
                 }

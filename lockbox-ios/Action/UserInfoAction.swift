@@ -5,6 +5,9 @@
 import Foundation
 import RxSwift
 import RxCocoa
+import RxOptional
+import Account
+import FxAUtils
 
 enum UserInfoAction: Action {
     case profileInfo(info: ProfileInfo)
@@ -41,7 +44,25 @@ class UserInfoActionHandler: ActionHandler {
     init(dispatcher: Dispatcher = Dispatcher.shared) {
         self.dispatcher = dispatcher
 
-        NotificationCenter.default.rx.not
+        NotificationCenter.default.rx
+                .notification(NotificationNames.FirefoxAccountProfileChanged)
+                .map { notification -> FirefoxAccount.FxAProfile? in
+                    let account = notification.object as? FirefoxAccount
+                    return account?.fxaProfile
+                }
+                .filterNil()
+                .map { profile -> ProfileInfo in
+                    return ProfileInfo(
+                            uid: "",
+                            email: profile.email,
+                            displayName: profile.displayName,
+                            avatar: profile.avatar.url
+                    )
+                }
+                .subscribe(onNext: { profile in
+                    self.dispatcher.dispatch(action: UserInfoAction.profileInfo(info: profile))
+                })
+                .disposed(by: self.disposeBag)
     }
 
     func invoke(_ action: UserInfoAction) {
