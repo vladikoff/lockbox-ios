@@ -101,7 +101,7 @@ class DataStore {
                 .disposed(by: disposeBag)
 
         self.syncState.subscribe(onNext: { state in
-            if state == SyncState.Synced {
+            if [.Synced, .NotSyncable].contains(state) {
                 self.updateList()
             }
         })
@@ -151,8 +151,11 @@ extension DataStore {
 
 extension DataStore {
     public func reset() {
-        FxALoginHelper.sharedInstance.applicationDidDisconnect(UIApplication.shared)
-        self.syncSubject.onNext(.NotSyncable)
+        profile.logins.removeAll() >>== {
+            FxALoginHelper.sharedInstance.applicationDidDisconnect(UIApplication.shared)
+            self.syncSubject.onNext(.NotSyncable)
+        }
+
     }
 }
 
@@ -162,6 +165,7 @@ extension DataStore {
     }
 
     private func registerNotificationCenter() {
+        // TODO turn this into NotificationCenter.default.rx
         guard notificationObservers == nil else {
             return
         }
@@ -170,7 +174,10 @@ extension DataStore {
                                           NotificationNames.ProfileDidFinishSyncing
         ]
         notificationObservers = names.map { name in
-            return NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main, using: updateSyncState(from:))
+            return NotificationCenter.default.addObserver(forName: name,
+                                                          object: nil,
+                                                          queue: .main,
+                                                          using: updateSyncState(from:))
         }
     }
 
