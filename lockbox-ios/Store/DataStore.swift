@@ -48,12 +48,11 @@ enum SyncState: Equatable {
 
 class DataStore {
     public static let shared = DataStore()
-    fileprivate let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     private var listSubject = ReplaySubject<[Login]>.create(bufferSize: 1)
     private var syncSubject = ReplaySubject<SyncState>.create(bufferSize: 1)
 
     private var profile: Profile
-    private var notificationObservers: [NSObjectProtocol]?
 
     public var list: Observable<[Login]> {
         return self.listSubject.asObservable()
@@ -110,10 +109,6 @@ class DataStore {
         setInitialSyncState()
     }
 
-    deinit {
-        unregisterNotificationObservers()
-    }
-
     private func setInitialSyncState() {
         let state: SyncState
         if !profile.hasSyncableAccount() {
@@ -155,7 +150,6 @@ extension DataStore {
             FxALoginHelper.sharedInstance.applicationDidDisconnect(UIApplication.shared)
             self.syncSubject.onNext(.NotSyncable)
         }
-
     }
 }
 
@@ -165,27 +159,16 @@ extension DataStore {
     }
 
     private func registerNotificationCenter() {
-        // TODO turn this into NotificationCenter.default.rx
-        guard notificationObservers == nil else {
-            return
-        }
         let names: [Notification.Name] = [NotificationNames.FirefoxAccountVerified,
                                           NotificationNames.ProfileDidStartSyncing,
                                           NotificationNames.ProfileDidFinishSyncing
         ]
-        notificationObservers = names.map { name in
-            return NotificationCenter.default.addObserver(forName: name,
-                                                          object: nil,
-                                                          queue: .main,
-                                                          using: updateSyncState(from:))
+        names.forEach { name in
+            NotificationCenter.default.rx
+                    .notification(name)
+                    .subscribe(onNext: { self.updateSyncState(from: $0) })
+                    .disposed(by: self.disposeBag)
         }
-    }
-
-    private func unregisterNotificationObservers() {
-        notificationObservers?.forEach { observer in
-            NotificationCenter.default.removeObserver(observer)
-        }
-        notificationObservers = nil
     }
 
     private func updateSyncState(from notification: Notification) {
