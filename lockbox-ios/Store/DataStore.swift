@@ -65,9 +65,8 @@ class DataStore {
 
     init(dispatcher: Dispatcher = Dispatcher.shared) {
         profile = BrowserProfile(localName: "lockbox-profile")
-        profile.syncManager.applicationDidBecomeActive()
-        FxALoginHelper.sharedInstance.application(UIApplication.shared, didLoadProfile: profile)
 
+        FxALoginHelper.sharedInstance.application(UIApplication.shared, didLoadProfile: profile)
         registerNotificationCenter()
 
         dispatcher.register
@@ -86,6 +85,20 @@ class DataStore {
                     }
                 })
                 .disposed(by: self.disposeBag)
+
+        dispatcher.register
+                .filterByType(class: LifecycleAction.self)
+                .subscribe(onNext: { action in
+                    switch action {
+                    case .background:
+                        self.profile.syncManager?.applicationDidEnterBackground()
+                    case .foreground:
+                        self.profile.syncManager?.applicationDidBecomeActive()
+                    case .startup:
+                        break
+                    }
+                })
+                .disposed(by: disposeBag)
 
         self.syncState.subscribe(onNext: { state in
             if state == SyncState.Synced {
