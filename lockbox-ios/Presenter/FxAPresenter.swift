@@ -19,6 +19,7 @@ class FxAPresenter {
     fileprivate let settingActionHandler: SettingActionHandler
     fileprivate let routeActionHandler: RouteActionHandler
     fileprivate let dataStoreActionHandler: DataStoreActionHandler
+    fileprivate let userInfoStore: UserInfoStore
     fileprivate let fxaStore: FxAStore
     fileprivate let dataStore: DataStore
 
@@ -35,6 +36,7 @@ class FxAPresenter {
          settingActionHandler: SettingActionHandler = SettingActionHandler.shared,
          routeActionHandler: RouteActionHandler = RouteActionHandler.shared,
          dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared,
+         userInfoStore: UserInfoStore = UserInfoStore.shared,
          fxaStore: FxAStore = FxAStore.shared,
          dataStore: DataStore = DataStore.shared) {
         self.view = view
@@ -42,6 +44,7 @@ class FxAPresenter {
         self.settingActionHandler = settingActionHandler
         self.routeActionHandler = routeActionHandler
         self.dataStoreActionHandler = dataStoreActionHandler
+        self.userInfoStore = userInfoStore
         self.fxaStore = fxaStore
         self.dataStore = dataStore
     }

@@ -52,12 +52,11 @@ class UserInfoActionHandler: ActionHandler {
                 }
                 .filterNil()
                 .map { profile -> ProfileInfo in
-                    return ProfileInfo(
-                            uid: "",
-                            email: profile.email,
-                            displayName: profile.displayName,
-                            avatar: profile.avatar.url
-                    )
+                    return ProfileInfo.Builder()
+                            .email(profile.email)
+                            .avatar(profile.avatar.url)
+                            .displayName(profile.displayName)
+                            .build()
                 }
                 .subscribe(onNext: { profile in
                     self.dispatcher.dispatch(action: UserInfoAction.profileInfo(info: profile))

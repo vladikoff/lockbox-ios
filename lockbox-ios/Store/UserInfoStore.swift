@@ -65,8 +65,7 @@ class UserInfoStore {
 
 extension UserInfoStore {
     private func populateInitialValues() {
-        if let email = self.keychainManager.retrieve(.email),
-           let uid = self.keychainManager.retrieve(.uid) {
+        if let email = self.keychainManager.retrieve(.email) {
             var avatarURL: URL?
             if let avatarString = self.keychainManager.retrieve(.avatarURL) {
                 avatarURL = URL(string: avatarString)
@@ -76,7 +75,6 @@ extension UserInfoStore {
 
             self._profileInfo.onNext(
                     ProfileInfo.Builder()
-                            .uid(uid)
                             .email(email)
                             .avatar(avatarURL)
                             .displayName(displayName)
@@ -114,8 +112,7 @@ extension UserInfoStore {
     }
 
     private func saveProfileInfo(_ info: ProfileInfo) -> Bool {
-        var success = self.keychainManager.save(info.email, identifier: .email) &&
-                self.keychainManager.save(info.uid, identifier: .uid)
+        var success = self.keychainManager.save(info.email, identifier: .email)
 
         if let displayName = info.displayName {
             success = success && self.keychainManager.save(displayName, identifier: .displayName)

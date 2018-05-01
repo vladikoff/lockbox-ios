@@ -33,8 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SettingActionHandler.shared.invoke(.reset)
             UserInfoActionHandler.shared.invoke(.clear)
             UserDefaults.standard.set(false, forKey: PostFirstRunKey)
-        } else {
-            UserInfoActionHandler.shared.invoke(.load)
         }
 
         let navBarImage = UIImage.createGradientImage(

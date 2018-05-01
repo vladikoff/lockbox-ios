@@ -16,6 +16,7 @@ class AccountSettingPresenter {
     let userInfoStore: UserInfoStore
     let routeActionHandler: RouteActionHandler
     let dataStoreActionHandler: DataStoreActionHandler
+    let userInfoActionHandler: UserInfoActionHandler
 
     lazy private var unlinkAccountObserver: AnyObserver<Void> = {
         return Binder(self) { target, _ in
@@ -33,26 +34,28 @@ class AccountSettingPresenter {
         return Binder(self) { target, _ in
             target.view?.displayAlertController(buttons: [
                 AlertActionButtonConfiguration(title: Constant.string.cancel,
-                                               tapObserver: nil,
-                                               style: .default),
+                        tapObserver: nil,
+                        style: .default),
                 AlertActionButtonConfiguration(title: Constant.string.unlink,
-                                               tapObserver: target.unlinkAccountObserver,
-                                               style: .destructive)],
-                                            title: Constant.string.confirmDialogTitle,
-                                            message: Constant.string.confirmDialogMessage,
-                                            style: .alert)
+                        tapObserver: target.unlinkAccountObserver,
+                        style: .destructive)],
+                    title: Constant.string.confirmDialogTitle,
+                    message: Constant.string.confirmDialogMessage,
+                    style: .alert)
         }.asObserver()
     }()
 
     init(view: AccountSettingViewProtocol,
          userInfoStore: UserInfoStore = UserInfoStore.shared,
          routeActionHandler: RouteActionHandler = RouteActionHandler.shared,
-         dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared
+         dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared,
+         userInfoActionHandler: UserInfoActionHandler = UserInfoActionHandler.shared
     ) {
         self.view = view
         self.userInfoStore = userInfoStore
         self.routeActionHandler = routeActionHandler
         self.dataStoreActionHandler = dataStoreActionHandler
+        self.userInfoActionHandler = userInfoActionHandler
     }
 
     func onViewReady() {
@@ -80,5 +83,7 @@ class AccountSettingPresenter {
                 .filterNil()
 
         self.view?.bind(avatarImage: avatarImageDriver)
+
+        self.userInfoActionHandler.invoke(.load)
     }
 }
