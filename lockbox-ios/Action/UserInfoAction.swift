@@ -3,6 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 enum UserInfoAction: Action {
     case profileInfo(info: ProfileInfo)
@@ -34,9 +36,12 @@ extension UserInfoAction: Equatable {
 class UserInfoActionHandler: ActionHandler {
     static let shared = UserInfoActionHandler()
     fileprivate var dispatcher: Dispatcher
+    fileprivate let disposeBag = DisposeBag()
 
     init(dispatcher: Dispatcher = Dispatcher.shared) {
         self.dispatcher = dispatcher
+
+        NotificationCenter.default.rx.not
     }
 
     func invoke(_ action: UserInfoAction) {

@@ -83,9 +83,9 @@ class FxAPresenter {
 extension FxAPresenter {
     // The user has signed in to a Firefox Account.  We're done!
     func onLogin(_ data: JSON) {
-        dataStoreActionHandler.invoke(.initialize(blob: data))
+        self.dataStoreActionHandler.invoke(.initialize(blob: data))
 
-        dataStore.syncState.subscribe(onNext: { state in
+        self.dataStore.syncState.subscribe(onNext: { state in
             if state == SyncState.Syncing {
                 self.routeActionHandler.invoke(MainRouteAction.list)
             }
