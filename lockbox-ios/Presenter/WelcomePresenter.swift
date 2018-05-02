@@ -37,6 +37,7 @@ class WelcomePresenter {
     private let userInfoStore: UserInfoStore
     private let dataStore: DataStore
     private let userDefaults: UserDefaults
+    private let dataStore: DataStore
     private let biometryManager: BiometryManager
     private let disposeBag = DisposeBag()
 
@@ -46,6 +47,7 @@ class WelcomePresenter {
          userInfoStore: UserInfoStore = UserInfoStore.shared,
          dataStore: DataStore = DataStore.shared,
          userDefaults: UserDefaults = UserDefaults.standard,
+         dataStore: DataStore = DataStore.shared,
          biometryManager: BiometryManager = BiometryManager()) {
         self.view = view
         self.routeActionHandler = routeActionHandler
@@ -54,6 +56,7 @@ class WelcomePresenter {
         self.dataStore = dataStore
         self.userDefaults = userDefaults
         self.biometryManager = biometryManager
+        self.dataStore = dataStore
     }
 
     func onViewReady() {

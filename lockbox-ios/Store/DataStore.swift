@@ -46,12 +46,41 @@ enum SyncState: Equatable {
     }
 }
 
+enum LoginStoreState: Equatable {
+    case Unprepared, Locked, Unlocked, Errored(cause: LoginStoreError)
+
+    public static func == (lhs: LoginStoreState, rhs: LoginStoreState) -> Bool {
+        switch (lhs, rhs) {
+        case (Unprepared, Unprepared): return true
+        case (Locked, Locked): return true
+        case (Unlocked, Unlocked): return true
+        case (Errored, Errored): return true
+        default:
+            return false
+        }
+    }
+}
+
+public enum LoginStoreError: Error {
+    // applies to just about every function call
+    case Unknown(cause: Error?)
+    case NotInitialized
+    case AlreadyInitialized
+    case VersionMismatch
+    case CryptoInvalidKey
+    case CryptoMissingKey
+    case Crypto
+    case InvalidItem
+    case Locked
+}
+
 class DataStore {
     public static let shared = DataStore()
     private let disposeBag = DisposeBag()
     private var listSubject = ReplaySubject<[Login]>.create(bufferSize: 1)
     private var syncSubject = ReplaySubject<SyncState>.create(bufferSize: 1)
     private var lockSubject = ReplaySubject<Bool>.create(bufferSize: 1)
+    private var storageStateSubject = ReplaySubject<LoginStoreState>.create(bufferSize: 1)
 
     private var profile: Profile
 
@@ -65,6 +94,10 @@ class DataStore {
 
     public var locked: Observable<Bool> {
         return self.lockSubject.asObservable()
+    }
+
+    public var storageState: Observable<LoginStoreState> {
+        return self.storageStateSubject.asObservable()
     }
 
     init(dispatcher: Dispatcher = Dispatcher.shared) {
@@ -85,6 +118,10 @@ class DataStore {
                         self.sync()
                     case let .touch(id: id):
                         self.touch(id: id)
+                    case .lock:
+                        self.lock()
+                    case .unlock:
+                        self.unlock()
                     default: break
                     }
                 })
@@ -105,11 +142,18 @@ class DataStore {
                 .disposed(by: disposeBag)
 
         self.syncState.subscribe(onNext: { state in
-            if [.Synced, .NotSyncable].contains(state) {
-                self.updateList()
-            }
-        })
-        .disposed(by: self.disposeBag)
+                if [.Synced, .NotSyncable].contains(state) {
+                    self.updateList()
+                }
+            })
+            .disposed(by: self.disposeBag)
+
+        self.storageState.subscribe(onNext: { state in
+                if [.Locked, .Unlocked].contains(state) {
+                    self.updateList()
+                }
+            })
+            .disposed(by: self.disposeBag)
 
         self.setInitialSyncState()
         self.lockSubject.onNext(false)
@@ -156,6 +200,41 @@ extension DataStore {
             FxALoginHelper.sharedInstance.applicationDidDisconnect(UIApplication.shared)
             self.syncSubject.onNext(.NotSyncable)
         }
+    }
+}
+
+extension DataStore {
+    func lock() {
+        guard !profile.isShutdown else {
+            return
+        }
+
+        guard profile.hasSyncableAccount() else {
+            return
+        }
+
+        profile.syncManager?.endTimedSyncs()
+
+        func finalShutdown() {
+            profile.shutdown()
+            storageStateSubject.onNext(.Locked)
+        }
+
+        if profile.syncManager.isSyncing {
+            profile.syncManager.syncEverything(why: .backgrounded) >>== finalShutdown
+        } else {
+            finalShutdown()
+        }
+    }
+
+    public func unlock() {
+        profile.reopen()
+
+        profile.syncManager?.beginTimedSyncs()
+
+        profile.syncManager.syncEverything(why: .startup)
+
+        storageStateSubject.onNext(.Unlocked)
     }
 }
 

@@ -15,6 +15,8 @@ enum DataStoreAction: Action {
     case reset
     case sync
     case touch(id: String)
+    case lock
+    case unlock
 }
 
 class DataStoreActionHandler: ActionHandler {

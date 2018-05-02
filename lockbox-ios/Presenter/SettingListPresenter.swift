@@ -88,7 +88,7 @@ class SettingListPresenter {
 
         self.view?.onSignOut
                 .subscribe { _ in
-                    self.dataStoreActionHandler.invoke(DataStoreAction.lock)
+                    self.dataStoreActionHandler.invoke(.lock)
                     self.routeActionHandler.invoke(LoginRouteAction.welcome)
                 }
                 .disposed(by: self.disposeBag)

@@ -98,7 +98,7 @@ extension FxAPresenter {
                     if latest.locked {
                         self.dataStoreActionHandler.invoke(.unlock)
                         self.routeActionHandler.invoke(MainRouteAction.list)
-                    } else if latest.state == SyncState.Syncing {
+                    } else if latest.state == SyncState.NotSyncable {
                         self.dataStoreActionHandler.invoke(.initialize(blob: data))
                     }
                 })
