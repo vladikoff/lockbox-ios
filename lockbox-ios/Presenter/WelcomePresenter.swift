@@ -33,22 +33,25 @@ class WelcomePresenter {
     private weak var view: WelcomeViewProtocol?
 
     private let routeActionHandler: RouteActionHandler
-    private let settingActionHandler: SettingActionHandler
+    private let dataStoreActionHandler: DataStoreActionHandler
     private let userInfoStore: UserInfoStore
+    private let dataStore: DataStore
     private let userDefaults: UserDefaults
     private let biometryManager: BiometryManager
     private let disposeBag = DisposeBag()
 
     init(view: WelcomeViewProtocol,
          routeActionHandler: RouteActionHandler = RouteActionHandler.shared,
-         settingActionHandler: SettingActionHandler = SettingActionHandler.shared,
+         dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared,
          userInfoStore: UserInfoStore = UserInfoStore.shared,
+         dataStore: DataStore = DataStore.shared,
          userDefaults: UserDefaults = UserDefaults.standard,
          biometryManager: BiometryManager = BiometryManager()) {
         self.view = view
         self.routeActionHandler = routeActionHandler
-        self.settingActionHandler = settingActionHandler
+        self.dataStoreActionHandler = dataStoreActionHandler
         self.userInfoStore = userInfoStore
+        self.dataStore = dataStore
         self.userDefaults = userDefaults
         self.biometryManager = biometryManager
     }
@@ -62,7 +65,7 @@ class WelcomePresenter {
             self.view?.biometricImageName.onNext(biometricImageName)
         }
 
-        let lockedObservable = self.userDefaults.onLock.distinctUntilChanged()
+        let lockedObservable = self.dataStore.locked.distinctUntilChanged()
         let biometricsObservable = self.userDefaults.onBiometricsEnabled.distinctUntilChanged()
 
         if let view = self.view {
@@ -97,7 +100,7 @@ class WelcomePresenter {
                                 }
                     }
                     .subscribe(onNext: { _ in
-                        self.settingActionHandler.invoke(SettingAction.visualLock(locked: false))
+                        self.dataStoreActionHandler.invoke(.unlock)
                         self.routeActionHandler.invoke(MainRouteAction.list)
                     })
                     .disposed(by: self.disposeBag)

@@ -62,7 +62,7 @@ class FxAPresenter {
                     case .loadInitialURL(let url):
                         self.view?.loadRequest(URLRequest(url: url))
                     case .finishedFetchingUserInformation:
-                        self.settingActionHandler.invoke(SettingAction.visualLock(locked: false))
+                        self.dataStoreActionHandler.invoke(DataStoreAction.lock)
                         self.routeActionHandler.invoke(MainRouteAction.list)
                     default:
                         break
@@ -92,11 +92,11 @@ class FxAPresenter {
 extension FxAPresenter {
     // The user has signed in to a Firefox Account.  We're done!
     func onLogin(_ data: JSON) {
-        Observable.combineLatest(self.userDefaults.onLock, self.dataStore.syncState)
+        Observable.combineLatest(self.dataStore.locked, self.dataStore.syncState)
                 .map { LockedSyncState(locked: $0.0, state: $0.1) }
                 .subscribe(onNext: { latest in
                     if latest.locked {
-                        self.settingActionHandler.invoke(.visualLock(locked: false))
+                        self.dataStoreActionHandler.invoke(.unlock)
                         self.routeActionHandler.invoke(MainRouteAction.list)
                     } else if latest.state == SyncState.Syncing {
                         self.dataStoreActionHandler.invoke(.initialize(blob: data))

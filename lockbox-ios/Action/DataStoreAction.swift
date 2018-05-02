@@ -10,9 +10,10 @@ import SwiftyJSON
 
 enum DataStoreAction: Action {
     case initialize(blob: JSON)
+    case lock
+    case unlock
     case reset
     case sync
-    case list
     case touch(id: String)
 }
 

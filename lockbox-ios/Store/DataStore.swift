@@ -63,7 +63,7 @@ class DataStore {
         return self.syncSubject.asObservable()
     }
 
-    public var lock: Observable<Bool> {
+    public var locked: Observable<Bool> {
         return self.lockSubject.asObservable()
     }
 

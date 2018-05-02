@@ -7,7 +7,6 @@ import Foundation
 enum SettingAction: Action {
     case biometricLogin(enabled: Bool)
     case autoLockTime(timeout: AutoLockSetting)
-    case visualLock(locked: Bool)
     case reset
     case preferredBrowser(browser: PreferredBrowserSetting)
     case recordUsageData(enabled: Bool)
@@ -20,8 +19,6 @@ extension SettingAction: Equatable {
             return lhEnabled == rhEnabled
         case (.autoLockTime(let lhTimeout), .autoLockTime(let rhTimeout)):
             return lhTimeout == rhTimeout
-        case (.visualLock(let lhLocked), .visualLock(let rhLocked)):
-            return lhLocked == rhLocked
         case (.preferredBrowser(let lhBrowser), .preferredBrowser(let rhBrowser)):
             return lhBrowser == rhBrowser
         case (.recordUsageData(let lhEnabled), .recordUsageData(let rhEnabled)):
@@ -35,7 +32,7 @@ extension SettingAction: Equatable {
 }
 
 enum SettingKey: String {
-    case biometricLogin, autoLockTime, locked, preferredBrowser, recordUsageData
+    case biometricLogin, autoLockTime, preferredBrowser, recordUsageData
 }
 
 class SettingActionHandler: ActionHandler {
@@ -55,8 +52,6 @@ class SettingActionHandler: ActionHandler {
             self.userDefaults.set(enabled, forKey: SettingKey.biometricLogin.rawValue)
         case .autoLockTime(let timeout):
             self.userDefaults.set(timeout.rawValue, forKey: SettingKey.autoLockTime.rawValue)
-        case .visualLock(let locked):
-            self.userDefaults.set(locked, forKey: SettingKey.locked.rawValue)
         case .preferredBrowser(let browser):
             self.userDefaults.set(browser.rawValue, forKey: SettingKey.preferredBrowser.rawValue)
         case .recordUsageData(let enabled):
@@ -66,8 +61,6 @@ class SettingActionHandler: ActionHandler {
                     forKey: SettingKey.biometricLogin.rawValue)
             self.userDefaults.set(Constant.setting.defaultAutoLockTimeout.rawValue,
                                   forKey: SettingKey.autoLockTime.rawValue)
-            self.userDefaults.set(Constant.setting.defaultLockedState,
-                                  forKey: SettingKey.locked.rawValue)
             self.userDefaults.set(Constant.setting.defaultPreferredBrowser.rawValue,
                                   forKey: SettingKey.preferredBrowser.rawValue)
             self.userDefaults.set(Constant.setting.defaultRecordUsageData,

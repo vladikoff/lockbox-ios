@@ -13,10 +13,6 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
-    var onLock: Observable<Bool> {
-        return self.on(setting: .locked, type: Bool.self)
-    }
-
     var onBiometricsEnabled: Observable<Bool> {
         return self.on(setting: .biometricLogin, type: Bool.self)
     }
