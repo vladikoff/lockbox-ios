@@ -111,7 +111,8 @@ class DataStore {
         })
         .disposed(by: self.disposeBag)
 
-        setInitialSyncState()
+        self.setInitialSyncState()
+        self.lockSubject.onNext(false)
     }
 
     private func setInitialSyncState() {
@@ -122,8 +123,8 @@ class DataStore {
             state = .ReadyToSync
         }
 
-        syncSubject.onNext(state)
-        updateList()
+        self.syncSubject.onNext(state)
+        self.updateList()
     }
 
     public func get(_ id: String) -> Observable<Login?> {
