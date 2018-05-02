@@ -92,20 +92,22 @@ class FxAPresenter {
 extension FxAPresenter {
     // The user has signed in to a Firefox Account.  We're done!
     func onLogin(_ data: JSON) {
-        Observable.combineLatest(self.dataStore.locked, self.dataStore.syncState)
-                .take(1)
-                .map { LockedSyncState(locked: $0.0, state: $0.1) }
-                .subscribe(onNext: { latest in
-                    if latest.locked {
-                        self.dataStoreActionHandler.invoke(.unlock)
-                        self.routeActionHandler.invoke(MainRouteAction.list)
-                    } else if latest.state == SyncState.NotSyncable {
-                        self.dataStoreActionHandler.invoke(.initialize(blob: data))
-                        self.routeActionHandler.invoke(MainRouteAction.list)
-                    } else if latest.state == SyncState.ReadyToSync {
-                        self.routeActionHandler.invoke(MainRouteAction.list)
-                    }
-                })
-                .disposed(by: self.disposeBag)
+        self.dataStore.locked
+            .take(1)
+            .subscribe(onNext: { [weak self] locked in
+                if locked {
+                    self?.dataStoreActionHandler.invoke(.unlock)
+                    self?.routeActionHandler.invoke(MainRouteAction.list)
+                }
+            }).disposed(by: disposeBag)
+
+        self.dataStore.syncState
+            .take(1)
+            .subscribe(onNext: { [weak self] syncState in
+                if syncState == .NotSyncable {
+                    self?.dataStoreActionHandler.invoke(.initialize(blob: data))
+                    self?.routeActionHandler.invoke(MainRouteAction.list)
+                }
+            }).disposed(by: disposeBag)
     }
 }

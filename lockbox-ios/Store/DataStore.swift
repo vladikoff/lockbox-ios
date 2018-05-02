@@ -163,8 +163,10 @@ class DataStore {
         self.storageState.subscribe(onNext: { state in
                 if state == .Unlocked {
                     self.updateList()
+                    self.lockSubject.onNext(false)
                 } else if state == .Locked {
                     self.makeEmptyList()
+                    self.lockSubject.onNext(true)
                 }
             })
             .disposed(by: self.disposeBag)
