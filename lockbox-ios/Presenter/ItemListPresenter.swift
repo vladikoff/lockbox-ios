@@ -62,7 +62,7 @@ class ItemListPresenter {
     }()
 
     lazy private(set) var refreshObserver: AnyObserver<Void> = {
-        return Binder(self) { target, filterText in
+        return Binder(self) { target, _ in
             target.dataStoreActionHandler.invoke(.sync)
         }.asObserver()
     }()
