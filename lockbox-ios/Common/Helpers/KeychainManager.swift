@@ -6,17 +6,13 @@ import Foundation
 import Security
 
 enum KeychainManagerIdentifier: String {
-    case email, scopedKey, uid, refreshToken, accessToken, idToken, displayName, avatarURL
+    case email, displayName, avatarURL, locked
 
     static let allValues: [KeychainManagerIdentifier] = [
         .email,
-        .scopedKey,
-        .uid,
-        .refreshToken,
-        .accessToken,
-        .idToken,
         .displayName,
-        .avatarURL
+        .avatarURL,
+        .locked
     ]
 }
 

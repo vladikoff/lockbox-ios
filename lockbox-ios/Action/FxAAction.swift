@@ -134,22 +134,22 @@ class FxAActionHandler: ActionHandler {
 
 extension FxAActionHandler {
     private func authenticateAndRetrieveUserInformation(code: String) {
-        self.postTokenRequest(code: code)
-                .do(onSuccess: { info in
-                    self.dispatcher.dispatch(action: UserInfoAction.oauthInfo(info: info))
-                    let scopedKey: String = try self.deriveScopedKeyFromJWE(info.keysJWE)
-                    self.dispatcher.dispatch(action: UserInfoAction.scopedKey(key: scopedKey))
-                })
-                .flatMap { info -> Single<ProfileInfo> in
-                    self.postProfileInfoRequest(accessToken: info.accessToken)
-                }
-                .subscribe(onSuccess: { profileInfo in
-                    self.dispatcher.dispatch(action: UserInfoAction.profileInfo(info: profileInfo))
-                    self.dispatcher.dispatch(action: FxADisplayAction.finishedFetchingUserInformation)
-                }, onError: { err in
-                    self.dispatcher.dispatch(action: ErrorAction(error: err))
-                })
-                .disposed(by: self.disposeBag)
+//        self.postTokenRequest(code: code)
+//                .do(onSuccess: { info in
+//                    self.dispatcher.dispatch(action: UserInfoAction.oauthInfo(info: info))
+//                    let scopedKey: String = try self.deriveScopedKeyFromJWE(info.keysJWE)
+//                    self.dispatcher.dispatch(action: UserInfoAction.scopedKey(key: scopedKey))
+//                })
+//                .flatMap { info -> Single<ProfileInfo> in
+//                    self.postProfileInfoRequest(accessToken: info.accessToken)
+//                }
+//                .subscribe(onSuccess: { profileInfo in
+//                    self.dispatcher.dispatch(action: UserInfoAction.profileInfo(info: profileInfo))
+//                    self.dispatcher.dispatch(action: FxADisplayAction.finishedFetchingUserInformation)
+//                }, onError: { err in
+//                    self.dispatcher.dispatch(action: ErrorAction(error: err))
+//                })
+//                .disposed(by: self.disposeBag)
     }
 
     private func deriveScopedKeyFromJWE(_ jwe: String) throws -> String {

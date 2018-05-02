@@ -11,8 +11,6 @@ import FxAUtils
 
 enum UserInfoAction: Action {
     case profileInfo(info: ProfileInfo)
-    case oauthInfo(info: OAuthInfo)
-    case scopedKey(key: String)
     case load
     case clear
 }
@@ -20,11 +18,7 @@ enum UserInfoAction: Action {
 extension UserInfoAction: Equatable {
     static func ==(lhs: UserInfoAction, rhs: UserInfoAction) -> Bool {
         switch (lhs, rhs) {
-        case (.scopedKey(let lhKey), .scopedKey(let rhKey)):
-            return lhKey == rhKey
         case (.profileInfo(let lhInfo), .profileInfo(let rhInfo)):
-            return lhInfo == rhInfo
-        case (.oauthInfo(let lhInfo), .oauthInfo(let rhInfo)):
             return lhInfo == rhInfo
         case (.load, .load):
             return true

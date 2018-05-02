@@ -460,6 +460,7 @@
 				7D5F1D8120866D8200688DEA /* Differentiator.framework in Frameworks */,
 				391233732090E56F00CB0233 /* SwiftyJSON.framework in Frameworks */,
 				7D5F1D7A20866A9400688DEA /* RxCocoa.framework in Frameworks */,
+				391233752090E56F00CB0233 /* SwiftKeychainWrapper.framework in Frameworks */,
 				7D5F1D7B20866A9400688DEA /* RxDataSources.framework in Frameworks */,
 				7D5F1D7C20866A9400688DEA /* RxOptional.framework in Frameworks */,
 				7D5F1D7D20866A9400688DEA /* RxSwift.framework in Frameworks */,
@@ -476,7 +477,6 @@
 				39DB366B208E25710026DA92 /* Deferred.framework in Frameworks */,
 				391233812090E60A00CB0233 /* XCGLogger.framework in Frameworks */,
 				39DB366D208E25710026DA92 /* FxAUtils.framework in Frameworks */,
-				391233752090E56F00CB0233 /* SwiftKeychainWrapper.framework in Frameworks */,
 				39DB3684208E2F8F0026DA92 /* FxA.framework in Frameworks */,
 				7D39202A1FB131FB00709575 /* libcjose.a in Frameworks */,
 				391233782090E5A300CB0233 /* Shared.framework in Frameworks */,
@@ -957,6 +957,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/RxDataSources.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Telemetry.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Differentiator.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftKeychainWrapper.framework",
 			);
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxCocoa.framework",
@@ -965,6 +966,7 @@
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/RxDataSources.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Telemetry.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Differentiator.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftKeychainWrapper.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

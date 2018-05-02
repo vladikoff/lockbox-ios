@@ -10,6 +10,7 @@ import RxOptional
 import Shared
 import Storage
 import SwiftyJSON
+import SwiftKeychainWrapper
 
 enum SyncError: Error {
     case CryptoInvalidKey
@@ -28,7 +29,7 @@ enum SyncError: Error {
 enum SyncState: Equatable {
     case NotSyncable, ReadyToSync, Syncing, Synced, Error(error: SyncError)
 
-    public static func == (lhs: SyncState, rhs: SyncState) -> Bool {
+    public static func ==(lhs: SyncState, rhs: SyncState) -> Bool {
         switch (lhs, rhs) {
         case (NotSyncable, NotSyncable):
             return true
@@ -49,7 +50,7 @@ enum SyncState: Equatable {
 enum LoginStoreState: Equatable {
     case Unprepared, Locked, Unlocked, Errored(cause: LoginStoreError)
 
-    public static func == (lhs: LoginStoreState, rhs: LoginStoreState) -> Bool {
+    public static func ==(lhs: LoginStoreState, rhs: LoginStoreState) -> Bool {
         switch (lhs, rhs) {
         case (Unprepared, Unprepared): return true
         case (Locked, Locked): return true
@@ -77,6 +78,7 @@ public enum LoginStoreError: Error {
 typealias ProfileFactory = (_ reset: Bool) -> Profile
 
 private let defaultProfileFactory: ProfileFactory = { reset in BrowserProfile(localName: "lockbox-profile", clear: reset) }
+private let lockedKey = "application_locked_state"
 
 class DataStore {
     public static let shared = DataStore()
@@ -88,6 +90,7 @@ class DataStore {
 
     private let fxaLoginHelper: FxALoginHelper
     private let profileFactory: ProfileFactory
+    private let keychainManager: KeychainManager
     private var profile: Profile
 
     public var list: Observable<[Login]> {
@@ -107,15 +110,17 @@ class DataStore {
     }
 
     init(dispatcher: Dispatcher = Dispatcher.shared,
+         keychainManager: KeychainManager = KeychainManager(),
          profileFactory: @escaping ProfileFactory = defaultProfileFactory,
          fxaLoginHelper: FxALoginHelper = FxALoginHelper.sharedInstance) {
         self.profileFactory = profileFactory
+        self.keychainManager = keychainManager
         self.fxaLoginHelper = fxaLoginHelper
 
         self.profile = profileFactory(false)
-        initializeProfile()
+        self.initializeProfile()
 
-        registerNotificationCenter()
+        self.registerNotificationCenter()
 
         dispatcher.register
                 .filterByType(class: DataStoreAction.self)
@@ -172,7 +177,7 @@ class DataStore {
             .disposed(by: self.disposeBag)
 
         self.setInitialSyncState()
-        self.lockSubject.onNext(false)
+        self.initializeLockedState()
     }
 
     private func initializeProfile() {
@@ -191,6 +196,16 @@ class DataStore {
 
         self.syncSubject.onNext(state)
         self.updateList()
+    }
+
+    private func initializeLockedState() {
+        let lockedValue = KeychainWrapper.standard.bool(forKey: lockedKey)
+        if let value = lockedValue {
+            self.lockSubject.onNext(value)
+        } else {
+            KeychainWrapper.standard.set(false, forKey: lockedKey)
+            self.lockSubject.onNext(false)
+        }
     }
 
     public func get(_ id: String) -> Observable<Login?> {
@@ -262,6 +277,8 @@ extension DataStore {
         func finalShutdown() {
             profile.shutdown()
             storageStateSubject.onNext(.Locked)
+            KeychainWrapper.standard.set(true, forKey: lockedKey)
+            self.lockSubject.onNext(true)
         }
 
         if profile.syncManager.isSyncing {
@@ -279,6 +296,8 @@ extension DataStore {
         profile.syncManager.syncEverything(why: .startup)
 
         storageStateSubject.onNext(.Unlocked)
+        KeychainWrapper.standard.set(true, forKey: lockedKey)
+        self.lockSubject.onNext(false)
     }
 }
 

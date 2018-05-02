@@ -34,6 +34,7 @@ class WelcomePresenter {
 
     private let routeActionHandler: RouteActionHandler
     private let dataStoreActionHandler: DataStoreActionHandler
+    private let userInfoActionHandler: UserInfoActionHandler
     private let userInfoStore: UserInfoStore
     private let dataStore: DataStore
     private let userDefaults: UserDefaults
@@ -43,6 +44,7 @@ class WelcomePresenter {
     init(view: WelcomeViewProtocol,
          routeActionHandler: RouteActionHandler = RouteActionHandler.shared,
          dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared,
+         userInfoActionHandler: UserInfoActionHandler = UserInfoActionHandler.shared,
          userInfoStore: UserInfoStore = UserInfoStore.shared,
          dataStore: DataStore = DataStore.shared,
          userDefaults: UserDefaults = UserDefaults.standard,
@@ -50,6 +52,7 @@ class WelcomePresenter {
         self.view = view
         self.routeActionHandler = routeActionHandler
         self.dataStoreActionHandler = dataStoreActionHandler
+        self.userInfoActionHandler = userInfoActionHandler
         self.userInfoStore = userInfoStore
         self.dataStore = dataStore
         self.userDefaults = userDefaults
@@ -111,5 +114,7 @@ class WelcomePresenter {
                     self.routeActionHandler.invoke(LoginRouteAction.fxa)
                 })
                 .disposed(by: self.disposeBag)
+
+        self.userInfoActionHandler.invoke(.load)
     }
 }

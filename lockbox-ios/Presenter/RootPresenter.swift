@@ -53,7 +53,14 @@ class RootPresenter {
         self.dataStoreActionHandler = dataStoreActionHandler
         self.telemetryActionHandler = telemetryActionHandler
 
-        self.dataStore.syncState
+        Observable.combineLatest(self.dataStore.locked, self.dataStore.syncState)
+                .do(onNext: { (latest: (Bool, SyncState)) in
+                    if latest.0 {
+                        self.routeActionHandler.invoke(LoginRouteAction.welcome)
+                    }
+                })
+                .filter { !$0.0 }
+                .map { $0.1 }
                 .subscribe(onNext: { state in
                     switch state {
                     case .NotSyncable:
