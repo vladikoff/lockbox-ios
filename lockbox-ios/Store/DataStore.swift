@@ -51,6 +51,7 @@ class DataStore {
     private let disposeBag = DisposeBag()
     private var listSubject = ReplaySubject<[Login]>.create(bufferSize: 1)
     private var syncSubject = ReplaySubject<SyncState>.create(bufferSize: 1)
+    private var lockSubject = ReplaySubject<Bool>.create(bufferSize: 1)
 
     private var profile: Profile
 
@@ -60,6 +61,10 @@ class DataStore {
 
     public var syncState: Observable<SyncState> {
         return self.syncSubject.asObservable()
+    }
+
+    public var lock: Observable<Bool> {
+        return self.lockSubject.asObservable()
     }
 
     init(dispatcher: Dispatcher = Dispatcher.shared) {
