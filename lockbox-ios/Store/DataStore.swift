@@ -74,6 +74,10 @@ public enum LoginStoreError: Error {
     case Locked
 }
 
+typealias ProfileFactory = () -> Profile
+
+private let defaultProfileFactory = { BrowserProfile(localName: "lockbox-profile") }
+
 class DataStore {
     public static let shared = DataStore()
     private let disposeBag = DisposeBag()
@@ -82,6 +86,8 @@ class DataStore {
     private var lockSubject = ReplaySubject<Bool>.create(bufferSize: 1)
     private var storageStateSubject = ReplaySubject<LoginStoreState>.create(bufferSize: 1)
 
+    private let fxaLoginHelper: FxALoginHelper
+    private let profileFactory: ProfileFactory
     private var profile: Profile
 
     public var list: Observable<[Login]> {
@@ -100,10 +106,15 @@ class DataStore {
         return self.storageStateSubject.asObservable()
     }
 
-    init(dispatcher: Dispatcher = Dispatcher.shared) {
-        profile = BrowserProfile(localName: "lockbox-profile")
+    init(dispatcher: Dispatcher = Dispatcher.shared,
+         profileFactory: @escaping ProfileFactory = defaultProfileFactory,
+         fxaLoginHelper: FxALoginHelper = FxALoginHelper.sharedInstance) {
+        self.profileFactory = profileFactory
+        self.fxaLoginHelper = fxaLoginHelper
 
-        FxALoginHelper.sharedInstance.application(UIApplication.shared, didLoadProfile: profile)
+        self.profile = profileFactory()
+        initializeProfile()
+
         registerNotificationCenter()
 
         dispatcher.register
@@ -141,21 +152,31 @@ class DataStore {
                 .disposed(by: disposeBag)
 
         self.syncState.subscribe(onNext: { state in
-                if [.Synced, .NotSyncable].contains(state) {
+                if state == .Synced {
                     self.updateList()
+                } else if state == .NotSyncable {
+                    self.makeEmptyList()
                 }
             })
             .disposed(by: self.disposeBag)
 
         self.storageState.subscribe(onNext: { state in
-                if [.Locked, .Unlocked].contains(state) {
+                if state == .Unlocked {
                     self.updateList()
+                } else if state == .Locked {
+                    self.makeEmptyList()
                 }
             })
             .disposed(by: self.disposeBag)
 
         self.setInitialSyncState()
         self.lockSubject.onNext(false)
+    }
+
+    private func initializeProfile() {
+        profile.syncManager?.applicationDidBecomeActive()
+
+        fxaLoginHelper.application(UIApplication.shared, didLoadProfile: profile)
     }
 
     private func setInitialSyncState() {
@@ -182,8 +203,7 @@ class DataStore {
 
 extension DataStore {
     public func login(_ data: JSON) {
-        let helper = FxALoginHelper.sharedInstance
-        helper.application(UIApplication.shared, didReceiveAccountJSON: data)
+        fxaLoginHelper.application(UIApplication.shared, didReceiveAccountJSON: data)
     }
 }
 
@@ -195,10 +215,28 @@ extension DataStore {
 
 extension DataStore {
     public func reset() {
-        profile.logins.removeAll() >>== {
-            FxALoginHelper.sharedInstance.applicationDidDisconnect(UIApplication.shared)
-            self.syncSubject.onNext(.NotSyncable)
+        func stopSyncing() -> Success {
+            guard let syncManager = self.profile.syncManager else {
+                return succeed()
+            }
+            syncManager.endTimedSyncs()
+            if !syncManager.isSyncing {
+                return succeed()
+            }
+
+            return syncManager.syncEverything(why: .backgrounded)
         }
+
+        func disconnect() -> Success {
+            self.fxaLoginHelper.applicationDidDisconnect(UIApplication.shared)
+            return succeed()
+        }
+
+        func deleteAll() -> Success {
+            return profile.logins.removeAll()
+        }
+
+        stopSyncing() >>== disconnect >>== deleteAll >>== { self.syncSubject.onNext(.NotSyncable) }
     }
 }
 
@@ -275,5 +313,9 @@ extension DataStore {
         logins.getAllLogins() >>== { (cursor: Cursor<Login>) in
             self.listSubject.onNext(cursor.asArray())
         }
+    }
+
+    private func makeEmptyList() {
+        self.listSubject.onNext([])
     }
 }
