@@ -100,6 +100,8 @@ extension FxAPresenter {
                         self.routeActionHandler.invoke(MainRouteAction.list)
                     } else if latest.state == SyncState.NotSyncable {
                         self.dataStoreActionHandler.invoke(.initialize(blob: data))
+                    } else if latest.state == SyncState.ReadyToSync {
+                        self.routeActionHandler.invoke(MainRouteAction.list)
                     }
                 })
                 .disposed(by: self.disposeBag)
