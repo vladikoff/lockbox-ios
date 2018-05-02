@@ -122,7 +122,6 @@ class DataStore {
                         self.lock()
                     case .unlock:
                         self.unlock()
-                    default: break
                     }
                 })
                 .disposed(by: self.disposeBag)

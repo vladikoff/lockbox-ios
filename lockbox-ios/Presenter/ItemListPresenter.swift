@@ -34,6 +34,7 @@ class ItemListPresenter {
     private weak var view: ItemListViewProtocol?
     private var routeActionHandler: RouteActionHandler
     private var itemListDisplayActionHandler: ItemListDisplayActionHandler
+    private var dataStoreActionHandler: DataStoreActionHandler
     private var dataStore: DataStore
     private var itemListDisplayStore: ItemListDisplayStore
     private var disposeBag = DisposeBag()
@@ -51,7 +52,7 @@ class ItemListPresenter {
     lazy private(set) var onSettingsTapped: AnyObserver<Void> = {
         return Binder(self) { target, _ in
             target.routeActionHandler.invoke(SettingRouteAction.list)
-            }.asObserver()
+        }.asObserver()
     }()
 
     lazy private(set) var filterTextObserver: AnyObserver<String> = {
@@ -60,25 +61,31 @@ class ItemListPresenter {
         }.asObserver()
     }()
 
+    lazy private(set) var refreshObserver: AnyObserver<Void> = {
+        return Binder(self) { target, filterText in
+            target.dataStoreActionHandler.invoke(.sync)
+        }.asObserver()
+    }()
+
     lazy private(set) var sortingButtonObserver: AnyObserver<Void> = {
         return Binder(self) { target, _ in
             target.view?.displayAlertController(buttons: [
-                                AlertActionButtonConfiguration(
-                                    title: Constant.string.alphabetically,
-                                    tapObserver: target.alphabeticSortObserver,
-                                    style: .default),
-                                AlertActionButtonConfiguration(
-                                    title: Constant.string.recentlyUsed,
-                                    tapObserver: target.recentlyUsedSortObserver,
-                                    style: .default),
-                                AlertActionButtonConfiguration(
-                                    title: Constant.string.cancel,
-                                    tapObserver: nil,
-                                    style: .cancel)],
-                                                title: Constant.string.sortEntries,
-                                                message: nil,
-                                                style: .actionSheet)
-            }.asObserver()
+                AlertActionButtonConfiguration(
+                        title: Constant.string.alphabetically,
+                        tapObserver: target.alphabeticSortObserver,
+                        style: .default),
+                AlertActionButtonConfiguration(
+                        title: Constant.string.recentlyUsed,
+                        tapObserver: target.recentlyUsedSortObserver,
+                        style: .default),
+                AlertActionButtonConfiguration(
+                        title: Constant.string.cancel,
+                        tapObserver: nil,
+                        style: .cancel)],
+                    title: Constant.string.sortEntries,
+                    message: nil,
+                    style: .actionSheet)
+        }.asObserver()
     }()
 
     lazy private var alphabeticSortObserver: AnyObserver<Void> = {
@@ -96,11 +103,13 @@ class ItemListPresenter {
     init(view: ItemListViewProtocol,
          routeActionHandler: RouteActionHandler = RouteActionHandler.shared,
          itemListDisplayActionHandler: ItemListDisplayActionHandler = ItemListDisplayActionHandler.shared,
+         dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared,
          dataStore: DataStore = DataStore.shared,
          itemListDisplayStore: ItemListDisplayStore = ItemListDisplayStore.shared) {
         self.view = view
         self.routeActionHandler = routeActionHandler
         self.itemListDisplayActionHandler = itemListDisplayActionHandler
+        self.dataStoreActionHandler = dataStoreActionHandler
         self.dataStore = dataStore
         self.itemListDisplayStore = itemListDisplayStore
     }
