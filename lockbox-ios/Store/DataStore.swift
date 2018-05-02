@@ -74,9 +74,9 @@ public enum LoginStoreError: Error {
     case Locked
 }
 
-typealias ProfileFactory = () -> Profile
+typealias ProfileFactory = (_ reset: Bool) -> Profile
 
-private let defaultProfileFactory = { BrowserProfile(localName: "lockbox-profile") }
+private let defaultProfileFactory: ProfileFactory = { reset in BrowserProfile(localName: "lockbox-profile", clear: reset) }
 
 class DataStore {
     public static let shared = DataStore()
@@ -112,7 +112,7 @@ class DataStore {
         self.profileFactory = profileFactory
         self.fxaLoginHelper = fxaLoginHelper
 
-        self.profile = profileFactory()
+        self.profile = profileFactory(false)
         initializeProfile()
 
         registerNotificationCenter()
@@ -230,15 +230,20 @@ extension DataStore {
         }
 
         func disconnect() -> Success {
-            self.fxaLoginHelper.applicationDidDisconnect(UIApplication.shared)
-            return succeed()
+            return self.fxaLoginHelper.applicationDidDisconnect(UIApplication.shared)
         }
 
         func deleteAll() -> Success {
             return profile.logins.removeAll()
         }
 
-        stopSyncing() >>== disconnect >>== deleteAll >>== { self.syncSubject.onNext(.NotSyncable) }
+        func resetProfile() {
+            profile = profileFactory(true)
+            initializeProfile()
+            syncSubject.onNext(.NotSyncable)
+        }
+
+        stopSyncing() >>== disconnect >>== deleteAll >>== resetProfile
     }
 }
 
