@@ -78,13 +78,13 @@ class DataStore {
                 .subscribe(onNext: { action in
                     switch action {
                     case let .initialize(blob: data):
-                        self.onLogin(data)
+                        self.login(data)
                     case .reset:
                         self.reset()
                     case .sync:
-                        self.onSync()
+                        self.sync()
                     case let .touch(id: id):
-                        self.onLoginUsage(id: id)
+                        self.touch(id: id)
                     default: break
                     }
                 })
@@ -138,14 +138,14 @@ class DataStore {
 }
 
 extension DataStore {
-    public func onLogin(_ data: JSON) {
+    public func login(_ data: JSON) {
         let helper = FxALoginHelper.sharedInstance
         helper.application(UIApplication.shared, didReceiveAccountJSON: data)
     }
 }
 
 extension DataStore {
-    public func onLoginUsage(id: String) {
+    public func touch(id: String) {
         profile.logins.addUseOfLoginByGUID(id)
     }
 }
@@ -160,14 +160,14 @@ extension DataStore {
 }
 
 extension DataStore {
-    public func onSync() {
+    public func sync() {
         profile.syncManager.syncEverything(why: .syncNow)
     }
 
     private func registerNotificationCenter() {
-        let names: [Notification.Name] = [NotificationNames.FirefoxAccountVerified,
-                                          NotificationNames.ProfileDidStartSyncing,
-                                          NotificationNames.ProfileDidFinishSyncing
+        let names = [NotificationNames.FirefoxAccountVerified,
+                      NotificationNames.ProfileDidStartSyncing,
+                      NotificationNames.ProfileDidFinishSyncing
         ]
         names.forEach { name in
             NotificationCenter.default.rx
