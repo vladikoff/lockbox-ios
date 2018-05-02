@@ -13,11 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    var profile: Profile!
-
     func application(_ application: UIApplication, willFinishLaunchingWithOptions
                      launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
-
+        _ = DataStore.shared
         return true
     }
 
