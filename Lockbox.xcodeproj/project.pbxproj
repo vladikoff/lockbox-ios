@@ -39,8 +39,8 @@
 		7AA540D7395F48BD6983CC3E /* Dispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54CDEA56C47263160AD0E /* Dispatcher.swift */; };
 		7AA540F07AF5551122E0EDB7 /* ErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54D4E439D76B910034E2A /* ErrorAction.swift */; };
 		7AA541388E228B6281F2A2E8 /* UserInfoStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54E826632AFFBA1677E5E /* UserInfoStoreSpec.swift */; };
-		7AA5419CD8E02252DE21CF47 /* BiometryOnboardingPresenterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54E4D59360BF1BD561D91 /* BiometryOnboardingPresenterSpec.swift */; };
 		7AA541981624DF66E83FFB72 /* ApplicationLifecycleAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA547479EBD794467A4A4DF /* ApplicationLifecycleAction.swift */; };
+		7AA5419CD8E02252DE21CF47 /* BiometryOnboardingPresenterSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54E4D59360BF1BD561D91 /* BiometryOnboardingPresenterSpec.swift */; };
 		7AA541B3BC9C4F5E6A725222 /* FxAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54C12A1BC616CA2344584 /* FxAView.swift */; };
 		7AA541BD28063282A0B8B352 /* Observable+Spec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA547CE3404CC8123CA455D /* Observable+Spec.swift */; };
 		7AA541ED07A75F27A211819B /* AccountSettingViewSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54E25FB7C712ECE1069E5 /* AccountSettingViewSpec.swift */; };
@@ -183,6 +183,8 @@
 		7DEF297E203E3A2100ABC4AC /* EntryEditDisclaimer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7DEF2980203E3A2100ABC4AC /* EntryEditDisclaimer.xib */; };
 		7DF469CA1F9F8FDA00375C74 /* RxTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DF469C91F9F8FDA00375C74 /* RxTest.framework */; };
 		7DF469CB1F9F8FE400375C74 /* RxTest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 7DF469C91F9F8FDA00375C74 /* RxTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CF3FC02F209BB48400870D3D /* FxAClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF3FC02E209BB48400870D3D /* FxAClient.framework */; };
+		CF3FC030209BB4BD00870D3D /* FxAClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CF3FC02E209BB48400870D3D /* FxAClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D5CC9BB8207D13660013CDEC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5CC9BB7207D13660013CDEC /* LaunchScreen.storyboard */; };
 		D5E2930A207D59050039A0AC /* FiraSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5E29308207D59030039A0AC /* FiraSans-Bold.ttf */; };
 		D5E2930B207D59050039A0AC /* FiraSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D5E29309207D59040039A0AC /* FiraSans-Italic.ttf */; };
@@ -224,6 +226,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				CF3FC030209BB4BD00870D3D /* FxAClient.framework in Embed Frameworks */,
 				391233762090E56F00CB0233 /* SwiftKeychainWrapper.framework in Embed Frameworks */,
 				3912336F2090E52800CB0233 /* FxA.framework in Embed Frameworks */,
 				3912337D2090E5E200CB0233 /* Storage.framework in Embed Frameworks */,
@@ -255,7 +258,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7AA5402F2105BDC7F8F308DA /* BiometryOnboardingViewSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiometryOnboardingViewSpec.swift; sourceTree = "<group>"; };
 		391233712090E56E00CB0233 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
 		391233722090E56E00CB0233 /* SwiftKeychainWrapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftKeychainWrapper.framework; path = Carthage/Build/iOS/SwiftKeychainWrapper.framework; sourceTree = "<group>"; };
 		391233772090E5A200CB0233 /* Shared.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Shared.framework; path = Carthage/Build/iOS/Shared.framework; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 		39B1508820878E42007497E5 /* Deferred.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Deferred.framework; path = Carthage/Build/iOS/Deferred.framework; sourceTree = "<group>"; };
 		39DB3677208E2A800026DA92 /* Account.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Account.framework; path = Carthage/Build/iOS/Account.framework; sourceTree = "<group>"; };
 		39DB367D208E2F8F0026DA92 /* FxA.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FxA.framework; path = Carthage/Build/iOS/FxA.framework; sourceTree = "<group>"; };
+		7AA5402F2105BDC7F8F308DA /* BiometryOnboardingViewSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiometryOnboardingViewSpec.swift; sourceTree = "<group>"; };
 		7AA5404248F72FC87CC4978B /* Date+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		7AA5406822AB67B669BAF89B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		7AA5408D5D52952F11E20EEC /* BiometryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiometryManager.swift; sourceTree = "<group>"; };
@@ -442,6 +445,7 @@
 		7DF469C31F9F8F8000375C74 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		7DF469C71F9F8FD500375C74 /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/iOS/RxBlocking.framework; sourceTree = "<group>"; };
 		7DF469C91F9F8FDA00375C74 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
+		CF3FC02E209BB48400870D3D /* FxAClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FxAClient.framework; path = Carthage/Build/iOS/FxAClient.framework; sourceTree = "<group>"; };
 		D5CC9BB7207D13660013CDEC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D5E29308207D59030039A0AC /* FiraSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FiraSans-Bold.ttf"; sourceTree = "<group>"; };
 		D5E29309207D59040039A0AC /* FiraSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FiraSans-Italic.ttf"; sourceTree = "<group>"; };
@@ -492,6 +496,7 @@
 				391233732090E56F00CB0233 /* SwiftyJSON.framework in Frameworks */,
 				7D5F1D7A20866A9400688DEA /* RxCocoa.framework in Frameworks */,
 				7D5F1D7B20866A9400688DEA /* RxDataSources.framework in Frameworks */,
+				CF3FC02F209BB48400870D3D /* FxAClient.framework in Frameworks */,
 				7D5F1D7C20866A9400688DEA /* RxOptional.framework in Frameworks */,
 				7D5F1D7D20866A9400688DEA /* RxSwift.framework in Frameworks */,
 				391233682090E52800CB0233 /* Account.framework in Frameworks */,
@@ -725,6 +730,7 @@
 				391233722090E56E00CB0233 /* SwiftKeychainWrapper.framework */,
 				391233712090E56E00CB0233 /* SwiftyJSON.framework */,
 				7D5F1D7F20866A9400688DEA /* RxGesture.framework */,
+				CF3FC02E209BB48400870D3D /* FxAClient.framework */,
 				7D92DAF220586FBA00195A1B /* RxOptional.framework */,
 				7DEA1C4120362E09008AD7C4 /* Differentiator.framework */,
 				7D320B3420360F9000891F73 /* RxDataSources.framework */,
@@ -1490,7 +1496,7 @@
 				);
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "lockbox-ios/Common/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1526,7 +1532,7 @@
 				);
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "lockbox-ios/Common/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1623,7 +1629,7 @@
 				);
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "lockbox-ios/Common/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

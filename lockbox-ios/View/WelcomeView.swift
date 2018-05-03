@@ -61,6 +61,8 @@ class WelcomeView: UIViewController {
 
 extension WelcomeView: WelcomeViewProtocol {
     public var loginButtonPressed: ControlEvent<Void> {
+        // WAT
+        
         return self.fxASigninButton.rx.tap
     }
 

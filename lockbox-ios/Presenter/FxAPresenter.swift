@@ -62,6 +62,7 @@ class FxAPresenter {
                 .drive(onNext: { latest in
                     switch latest.action {
                     case .loadInitialURL(let url):
+                        
                         self.view?.loadRequest(URLRequest(url: url))
                     case .finishedFetchingUserInformation:
                         self.settingActionHandler.invoke(SettingAction.visualLock(locked: false))

@@ -106,6 +106,8 @@ class WelcomePresenter {
 
         self.view?.loginButtonPressed
                 .subscribe(onNext: { _ in
+                    
+                    
                     self.routeActionHandler.invoke(LoginRouteAction.fxa)
                 })
                 .disposed(by: self.disposeBag)

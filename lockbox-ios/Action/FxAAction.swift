@@ -4,6 +4,7 @@
 
 import Foundation
 import RxSwift
+import FxAClient
 
 enum FxADisplayAction: Action {
     case loadInitialURL(url: URL)
@@ -51,6 +52,8 @@ class FxAActionHandler: ActionHandler {
     lazy internal var codeVerifier: String = self.keyManager.random32()!.base64URLEncodedString()
     lazy internal var codeChallenge: String = self.codeVerifier.sha256withBase64URL()!
     internal var jwkKey: String?
+    internal var flowId: String?
+    internal var fxa: FirefoxAccount?
 
     lazy private var authURL: URL = { [weak self] in
         var components = URLComponents()
@@ -103,36 +106,73 @@ class FxAActionHandler: ActionHandler {
     }
 
     public func initiateFxAAuthentication() {
+        
+        let cfg = FxAConfig.release()
+        let resp = "{\"customizeSync\":false,\"email\":\"vlad2@restmail.net\",\"keyFetchToken\":\"e25ea2b104e061142fa53827fcf98c83cea46ebdb1988169b9166e07d6ba2834\",\"sessionToken\":\"9996bdf23e8bf59f66f64db61732ef853bb6d912ff567fa3a027db3afe564d31\",\"uid\":\"5946fdc94c964f3c88f4f629a31cad3d\",\"unwrapBKey\":\"5cbac7381e37e3db256313415e10d0462239589945a862f5827c958efe12133a\",\"verified\":false,\"verifiedCanLinkAccount\":true}"
+        self.fxa = FirefoxAccount.from(config: cfg, webChannelResponse: resp)
+        let scopes = "profile openid \(self.scope ?? "")";
+        let oauthFlow = fxa!.beginOAuthFlow(clientId: Constant.fxa.clientID, redirectURI: Constant.app.redirectURI, scopes: scopes)!
+        let keys_jwk = URL(string: oauthFlow.authorizationURI)!;
+        self.flowId = oauthFlow.flowId;
+        
+        var dict = [String:String]()
+        let components = URLComponents(url: keys_jwk, resolvingAgainstBaseURL: false)!
+        if let queryItems = components.queryItems {
+            for item in queryItems {
+                dict[item.name] = item.value!
+            }
+        }
+        
         do {
             self.jwkKey = try self.keyManager.getEphemeralPublicECDH().base64URL()
         } catch {
             self.dispatcher.dispatch(action: ErrorAction(error: error))
             return
         }
+        
+        self.authURL = keys_jwk;
+
 
         self.dispatcher.dispatch(action: FxADisplayAction.loadInitialURL(url: self.authURL))
     }
 
     public func matchingRedirectURLReceived(components: URLComponents) {
-        var code: String
-        do {
-            code = try validateQueryParamsForAuthCode(components.queryItems!)
-        } catch {
-            self.dispatcher.dispatch(action: ErrorAction(error: error))
-            return
+
+        guard let state = components.queryItems!.first(where: { $0.name == "state" }),
+            let stateValue = state.value else {
+                self.dispatcher.dispatch(action: ErrorAction(error: FxAError.RedirectNoState))
+                return
+        }
+        
+        guard let code = components.queryItems!.first(where: { $0.name == "code" }),
+            let codeValue = code.value else {
+                self.dispatcher.dispatch(action: ErrorAction(error: FxAError.RedirectNoCode))
+                return
         }
 
+
         self.dispatcher.dispatch(action: FxADisplayAction.fetchingUserInformation)
-        self.authenticateAndRetrieveUserInformation(code: code)
+        let consumed = self.fxa!.consumeOAuthFlowCode(flowId: self.flowId!, code: codeValue, state: stateValue)
+        self.authenticateAndRetrieveUserInformation(scopedKey: consumed!)
     }
 }
 
 extension FxAActionHandler {
-    private func authenticateAndRetrieveUserInformation(code: String) {
-        self.postTokenRequest(code: code)
+    private func authenticateAndRetrieveUserInformation(scopedKey: String) {
+        
+        return Single<OAuthInfo>.create { single in
+            
+            let currentDate = Date()
+            var dateComponent = DateComponents()
+            dateComponent.year = 2030
+            let futureDate = Calendar.current.date(byAdding: dateComponent, to: currentDate)
+            let info = OAuthInfo(accessToken: "a", expiresAt: futureDate!, refreshToken: "c", idToken: "d", keysJWE: "wat")
+            
+            single(.success(info))
+            return Disposables.create()
+            }
                 .do(onSuccess: { info in
                     self.dispatcher.dispatch(action: UserInfoAction.oauthInfo(info: info))
-                    let scopedKey: String = try self.deriveScopedKeyFromJWE(info.keysJWE)
                     self.dispatcher.dispatch(action: UserInfoAction.scopedKey(key: scopedKey))
                 })
                 .flatMap { info -> Single<ProfileInfo> in
@@ -173,9 +213,6 @@ extension FxAActionHandler {
             throw FxAError.RedirectNoCode
         }
 
-        guard state.value == self.state else {
-            throw FxAError.RedirectBadState
-        }
 
         return codeValue
     }
