@@ -92,15 +92,6 @@ class FxAPresenter {
 extension FxAPresenter {
     // The user has signed in to a Firefox Account.  We're done!
     func onLogin(_ data: JSON) {
-        self.dataStore.locked
-            .take(1)
-            .subscribe(onNext: { [weak self] locked in
-                if locked {
-                    self?.dataStoreActionHandler.invoke(.unlock)
-                    self?.routeActionHandler.invoke(MainRouteAction.list)
-                }
-            }).disposed(by: disposeBag)
-
         self.dataStore.syncState
             .take(1)
             .subscribe(onNext: { [weak self] syncState in

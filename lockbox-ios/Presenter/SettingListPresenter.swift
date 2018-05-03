@@ -19,7 +19,6 @@ class SettingListPresenter {
     private let settingActionHandler: SettingActionHandler
     private let dataStoreActionHandler: DataStoreActionHandler
     private let userDefaults: UserDefaults
-    private let biometryManager: BiometryManager
     private let disposeBag = DisposeBag()
 
     lazy private(set) var onDone: AnyObserver<Void> = {
@@ -38,49 +37,31 @@ class SettingListPresenter {
         }.asObserver()
     }()
 
-    lazy private(set) var onBiometricSettingChanged: AnyObserver<Bool> = {
-        return Binder(self) { target, enabled in
-            target.settingActionHandler.invoke(SettingAction.biometricLogin(enabled: enabled))
-        }.asObserver()
-    }()
-
     lazy private(set) var onUsageDataSettingChanged: AnyObserver<Bool> = {
         return Binder(self) { target, enabled in
             target.settingActionHandler.invoke(SettingAction.recordUsageData(enabled: enabled))
         }.asObserver()
     }()
 
-    lazy var touchIdSetting = SwitchSettingCellConfiguration(
-            text: Constant.string.settingsTouchId,
-            routeAction: nil,
-            onChanged: onBiometricSettingChanged)
-    lazy var faceIdSetting = SwitchSettingCellConfiguration(
-            text: Constant.string.settingsFaceId,
-            routeAction: nil,
-            onChanged: onBiometricSettingChanged)
-
     init(view: SettingListViewProtocol,
          routeActionHandler: RouteActionHandler = RouteActionHandler.shared,
          settingActionHandler: SettingActionHandler = SettingActionHandler.shared,
          dataStoreActionHandler: DataStoreActionHandler = DataStoreActionHandler.shared,
-         userDefaults: UserDefaults = UserDefaults.standard,
-         biometryManager: BiometryManager = BiometryManager()) {
+         userDefaults: UserDefaults = UserDefaults.standard) {
         self.view = view
         self.routeActionHandler = routeActionHandler
         self.settingActionHandler = settingActionHandler
         self.dataStoreActionHandler = dataStoreActionHandler
         self.userDefaults = userDefaults
-        self.biometryManager = biometryManager
     }
 
     func onViewReady() {
-        let settingsConfigDriver = Observable.combineLatest(self.userDefaults.onBiometricsEnabled, self.userDefaults.onAutoLockTime, self.userDefaults.onPreferredBrowser, self.userDefaults.onRecordUsageData) // swiftlint:disable:this line_length
-                .map { (latest: (Bool, AutoLockSetting, PreferredBrowserSetting, Bool)) -> [SettingSectionModel] in
+        let settingsConfigDriver = Observable.combineLatest(self.userDefaults.onAutoLockTime, self.userDefaults.onPreferredBrowser, self.userDefaults.onRecordUsageData) // swiftlint:disable:this line_length
+                .map { (latest: (AutoLockSetting, PreferredBrowserSetting, Bool)) -> [SettingSectionModel] in
                     return self.getSettings(
-                            biometricSettingEnabled: latest.0,
-                            autoLock: latest.1,
-                            preferredBrowser: latest.2,
-                            usageDataEnabled: latest.3)
+                            autoLock: latest.0,
+                            preferredBrowser: latest.1,
+                            usageDataEnabled: latest.2)
                 }
                 .asDriver(onErrorJustReturn: [])
 
@@ -97,7 +78,6 @@ class SettingListPresenter {
 
 extension SettingListPresenter {
     fileprivate func getSettings(
-            biometricSettingEnabled: Bool,
             autoLock: AutoLockSetting?,
             preferredBrowser: PreferredBrowserSetting,
             usageDataEnabled: Bool) -> [SettingSectionModel] {
@@ -116,13 +96,6 @@ extension SettingListPresenter {
                     text: Constant.string.settingsAccount,
                     routeAction: SettingRouteAction.account)
         ])
-
-        if self.biometryManager.usesFaceID || self.biometryManager.usesTouchID {
-            let biometricSetting = self.biometryManager.usesFaceID ? faceIdSetting : touchIdSetting
-            biometricSetting.isOn = biometricSettingEnabled
-
-            applicationConfigurationSection.items.append(biometricSetting)
-        }
 
         let autoLockSetting = SettingCellConfiguration(
                 text: Constant.string.settingsAutoLock,

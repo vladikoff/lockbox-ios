@@ -5,7 +5,6 @@
 import Foundation
 
 enum SettingAction: Action {
-    case biometricLogin(enabled: Bool)
     case autoLockTime(timeout: AutoLockSetting)
     case reset
     case preferredBrowser(browser: PreferredBrowserSetting)
@@ -15,8 +14,6 @@ enum SettingAction: Action {
 extension SettingAction: Equatable {
     static func ==(lhs: SettingAction, rhs: SettingAction) -> Bool {
         switch (lhs, rhs) {
-        case (.biometricLogin(let lhEnabled), .biometricLogin(let rhEnabled)):
-            return lhEnabled == rhEnabled
         case (.autoLockTime(let lhTimeout), .autoLockTime(let rhTimeout)):
             return lhTimeout == rhTimeout
         case (.preferredBrowser(let lhBrowser), .preferredBrowser(let rhBrowser)):
@@ -32,7 +29,7 @@ extension SettingAction: Equatable {
 }
 
 enum SettingKey: String {
-    case biometricLogin, autoLockTime, preferredBrowser, recordUsageData
+    case autoLockTime, preferredBrowser, recordUsageData
 }
 
 class SettingActionHandler: ActionHandler {
@@ -48,8 +45,6 @@ class SettingActionHandler: ActionHandler {
 
     func invoke(_ action: SettingAction) {
         switch action {
-        case .biometricLogin(let enabled):
-            self.userDefaults.set(enabled, forKey: SettingKey.biometricLogin.rawValue)
         case .autoLockTime(let timeout):
             self.userDefaults.set(timeout.rawValue, forKey: SettingKey.autoLockTime.rawValue)
         case .preferredBrowser(let browser):
@@ -57,8 +52,6 @@ class SettingActionHandler: ActionHandler {
         case .recordUsageData(let enabled):
             self.userDefaults.set(enabled, forKey: SettingKey.recordUsageData.rawValue)
         case .reset:
-            self.userDefaults.set(Constant.setting.defaultBiometricLockEnabled,
-                    forKey: SettingKey.biometricLogin.rawValue)
             self.userDefaults.set(Constant.setting.defaultAutoLockTimeout.rawValue,
                                   forKey: SettingKey.autoLockTime.rawValue)
             self.userDefaults.set(Constant.setting.defaultPreferredBrowser.rawValue,

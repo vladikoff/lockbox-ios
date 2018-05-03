@@ -78,7 +78,6 @@
 		7AA548263012DE1D03950DE0 /* RouteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54C369D0BF64704C8D5FB /* RouteStore.swift */; };
 		7AA54843ADAB6552EDA77C81 /* ProfileInfoSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA546BF73E7AFEB663E5DA8 /* ProfileInfoSpec.swift */; };
 		7AA54850D6DE1CD66D8C43AE /* UserInfoActionSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54FC2201512347C683533 /* UserInfoActionSpec.swift */; };
-		7AA54852A3EF5EBAB04AAD42 /* FxAStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54EA2449ADA0942EECA02 /* FxAStoreSpec.swift */; };
 		7AA54869D92433B631B6560B /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54C7A277D5D7C03F4F453 /* MainNavigationController.swift */; };
 		7AA54896CA92B9048C531179 /* LoginNavigationControllerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA54204B5AFD9672649ACF0 /* LoginNavigationControllerSpec.swift */; };
 		7AA548BBE384D40397D26E9B /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA546C351E7D7C7DE3BEF0C /* RootView.swift */; };
@@ -339,7 +338,6 @@
 		7AA54E826632AFFBA1677E5E /* UserInfoStoreSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfoStoreSpec.swift; sourceTree = "<group>"; };
 		7AA54E8C5A0848F0669FBB10 /* SettingNavigationControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingNavigationControllerSpec.swift; sourceTree = "<group>"; };
 		7AA54E9846C5A9F801A7FE1C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		7AA54EA2449ADA0942EECA02 /* FxAStoreSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FxAStoreSpec.swift; sourceTree = "<group>"; };
 		7AA54EAE6E8D8E78F37BEA82 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		7AA54ECD9692A1A74FC877A4 /* KeychainManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		7AA54EDDE9ECFDD6DFC4DEC5 /* UIColor+Spec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Spec.swift"; sourceTree = "<group>"; };
@@ -730,7 +728,6 @@
 				7AA5439EEDE4AB222842E7C8 /* DataStoreSpec.swift */,
 				7AA54C53A73B2C31DAB76E08 /* RouteStoreSpec.swift */,
 				7AA5469D908525083C732018 /* RouteActionSpec.swift */,
-				7AA54EA2449ADA0942EECA02 /* FxAStoreSpec.swift */,
 				7AA540B2CD80BD7AB0E09813 /* FxAActionSpec.swift */,
 				7AA54E826632AFFBA1677E5E /* UserInfoStoreSpec.swift */,
 				7AA54C72B63B2B4C8200F3F8 /* RootPresenterSpec.swift */,
@@ -1030,7 +1027,6 @@
 				D8D0293220702D9400CC01C6 /* AutoLockSettingsViewSpec.swift in Sources */,
 				7AA54B255317D07347416493 /* RouteStoreSpec.swift in Sources */,
 				7AA54DD6E3A60AC511C4D53A /* RouteActionSpec.swift in Sources */,
-				7AA54852A3EF5EBAB04AAD42 /* FxAStoreSpec.swift in Sources */,
 				7DA4C68F2028F99800B61DD8 /* UIViewController+Spec.swift in Sources */,
 				7AA549F77B3C142668BAE986 /* FxAActionSpec.swift in Sources */,
 				7AA541388E228B6281F2A2E8 /* UserInfoStoreSpec.swift in Sources */,
