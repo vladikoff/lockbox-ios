@@ -77,7 +77,9 @@ public enum LoginStoreError: Error {
 
 typealias ProfileFactory = (_ reset: Bool) -> Profile
 
-private let defaultProfileFactory: ProfileFactory = { reset in BrowserProfile(localName: "lockbox-profile", clear: reset) }
+private let defaultProfileFactory: ProfileFactory = { reset in
+    BrowserProfile(localName: "lockbox-profile", clear: reset)
+}
 private let lockedKey = "application_locked_state"
 
 class DataStore {
@@ -138,6 +140,10 @@ class DataStore {
                         self.lock()
                     case .unlock:
                         self.unlock()
+                    case let .add(item: login):
+                        self.add(item: login)
+                    case let .remove(id: id):
+                        self.remove(id: id)
                     }
                 })
                 .disposed(by: self.disposeBag)
@@ -343,5 +349,15 @@ extension DataStore {
 
     private func makeEmptyList() {
         self.listSubject.onNext([])
+    }
+}
+
+extension DataStore {
+    public func remove(id: String) {
+        self.profile.logins.removeLoginByGUID(id) >>== { self.syncSubject.onNext(.ReadyToSync) }
+    }
+
+    public func add(item: LoginData) {
+        self.profile.logins.addLogin(item) >>== { self.syncSubject.onNext(.ReadyToSync) }
     }
 }

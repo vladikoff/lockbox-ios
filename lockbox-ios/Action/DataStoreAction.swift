@@ -6,6 +6,7 @@ import Foundation
 import WebKit
 import RxSwift
 import RxCocoa
+import Storage
 import SwiftyJSON
 
 enum DataStoreAction: Action {
@@ -15,6 +16,8 @@ enum DataStoreAction: Action {
     case reset
     case sync
     case touch(id: String)
+    case add(item: LoginData)
+    case remove(id: String)
 }
 
 class DataStoreActionHandler: ActionHandler {
